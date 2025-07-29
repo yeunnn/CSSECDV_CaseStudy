@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  	<head>
+	
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/images/ossu-logo.png">
+
+    <title>OSSU | Menu</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.css">
+
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <link rel="stylesheet" href="/css/owl-carousel.css">
+
+    <link rel="stylesheet" href="/css/lightbox.css">
+
+    <link rel="stylesheet" href="/css/order-style.css">
+    
+    <style>
+        h1 {
+            color: #333;
+        }
+
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px;
+            justify-items: center;
+        }
+
+        .menu-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 230px;
+        }
+
+        .menu-item img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .categories {
+            padding: 5px;
+        }
+
+        .cart-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 20px;
+            width: 600px;
+            margin-left: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .cart-item img {
+            max-width: 50px;
+            max-height: 50px;
+            margin-right: 10px;
+        }
+
+        button {
+            margin: 5px;
+        }
+
+        .menu-item input {
+            width: 30px;
+            text-align: center;
+        }
+
+        .cart-container h2 {
+            border-bottom: 1px solid #000; /* You can adjust the color and style of the line */
+            padding-bottom: 5px; /* Adjust the padding as needed */
+        }
+
+        input[type='number']{
+            width: 40px;
+        }
+
+        .table-no-style {
+            float: right;
+        }
+    </style>
+
+    </head>
+
+    <body>
+    
+    <!-- ***** Header Area Start ***** -->
+        <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Logo Start ***** -->
+                        <a href="#top" class="logo">
+                            <img src="/images/ossu-logo.png" width="60px" height="60px">
+                        </a>
+                        <!-- ***** Logo End ***** -->
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <li class="scroll-to-section"><a href="/">Home</a></li>
+                            <li class="scroll-to-section"><a href="menu-public">Menu</a></li>
+                            <li class="scroll-to-section"><a href="staff-login" id="login-color">Staff</a></li>
+                        </ul>
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+    <div id="top">
+        <div class="container-fluid">
+        </div>
+    </div>
+
+    <!-- ***** Menu Starts Here ***** -->
+    <section class="section" id="header-fix-section">
+        <div class="container">
+            <div class="section-heading">
+                <h6>OSSU Restaurant</h6>
+                <h2>Food Menu</h2>
+            </div>
+            <div class="categories">
+                <button onclick="filterCategory('all')">All</button>
+                <button onclick="filterCategory('meals')">Meals</button>
+                <button onclick="filterCategory('snacks')">Snacks</button>
+                <button onclick="filterCategory('drinks')">Drinks</button>
+                <button onclick="filterCategory('desserts')">Desserts</button>
+            </div>
+            <div id="menu" class="menu-container"></div>
+            <br>
+            <div id="pagination"></div>
+        </div>
+    </section>
+    
+    <!-- ***** Menu Ends Here ***** -->
+
+    <!-- ***** Footer Start ***** -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-xs-12">
+                    <div class="right-text-content">
+                            <ul class="social-icons">
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                            </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="logo">
+                        <a href="#top"><img src="/images/ossu-logo-new.png" alt="" width="170px" height="55px"></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs-12">
+                    <div class="left-text-content">
+                        <p>© Copyright OSSU.
+                        
+                        <br>All Rights Reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/js/jquery-2.1.0.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="/js/popper.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <!-- Plugins -->
+    <script src="/js/owl-carousel.js"></script>
+    <script src="/js/accordions.js"></script>
+    <script src="/js/datepicker.js"></script>
+    <script src="/js/scrollreveal.min.js"></script>
+    <script src="/js/waypoints.min.js"></script>
+    <script src="/js/jquery.counterup.min.js"></script>
+    <script src="/js/imgfix.min.js"></script> 
+    <script src="/js/slick.js"></script> 
+    <script src="/js/lightbox.js"></script> 
+    <script src="/js/isotope.js"></script> 
+    
+    <!-- Global Init -->
+    <script src="/js/menu-public.js"></script>
+    <script src="/js/custom.js"></script>
+    <script>
+
+        $(function() {
+            var selectedClass = "";
+            $("p").click(function(){
+            selectedClass = $(this).attr("data-rel");
+            $("#portfolio").fadeTo(50, 0.1);
+                $("#portfolio div").not("."+selectedClass).fadeOut();
+            setTimeout(function() {
+              $("."+selectedClass).fadeIn();
+              $("#portfolio").fadeTo(50, 1);
+            }, 500);
+                
+            });
+        });
+
+    </script>
+
+    </body>
+</html>

@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900");
+
+.middle-div {
+    justify-content: center;
+    letter-spacing: 1px;
+    display: flex;
+    flex-direction: row;
+    width: 60%;
+    height: 100%;
+    background-color: black; /* Set your desired background color */
+    margin: auto;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 5px;
+  }
+
+  .order-left-align {
+    width: 20%;
+    text-align: left;
+    padding: 1rem;
+  }
+
+  .order-right-align {
+    width: 20%;
+    text-align: justify;
+    padding: 1rem;
+  }
+
+  .space{
+    width: 30%;
+  }
+  h5{
+    line-height: 2.6;
+    font-weight: 500;
+  }
+
+/* --------- New ------------- */
+.receipt {
+  max-width: 80%;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  padding: 2em;
+  background-color: #f9f9f9;
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.receipt-items {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.receipt-items th, .receipt-items td {
+  border: 1px solid #ccc;
+  padding: 1em;
+  text-align: left;
+  font-size: 1em;
+}
+
+.receipt-items th {
+  background-color: #f2f2f2;
+}
+
+.receipt-items td:last-child {
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .receipt {
+      padding: 1em;
+  }
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.center-button a{
+  margin: 10px;
+}
+
+.button-style {
+  background-color:#ea5008;
+  color: #fff;
+  border-radius:10px;
+  padding: 0.5rem;
+  
+}
+
+.button-style:hover {
+  color:white;
+  background-color:black;
+  
+}
+
+.order-id{
+  align-items: center;
+  color: black;
+  text-align: center;
+  padding: 1rem;
+  font-weight: bold;
+}
+

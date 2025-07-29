@@ -1,0 +1,70 @@
+<!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Logo Start ***** -->
+                        <a href="#top" class="logo">
+                            <img src="/images/ossu-logo.png" width="60px" height="60px">
+                        </a>
+                        <!-- ***** Logo End ***** -->
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <!-- Homepage -->
+                            {{#ifCond active 'index'}}
+                                <li class="scroll-to-section"><a href="/index">Home</a></li>
+                                <li class="scroll-to-section"><a href="#about">About</a></li>
+                                <li class="scroll-to-section"><a href="#menu">Offers</a></li>
+                                <li class="scroll-to-section"><a href="#reservation">Contact Us</a></li>
+                                {{#ifCond position 'Guest'}}
+                                    <li class="scroll-to-section"><a href="menu-public">Menu</a></li>
+                                {{/ifCond}}
+                                {{#ifCond position 'Customer'}}
+                                    <li class="scroll-to-section"><a href="menu">Menu</a></li>
+                                    <li class="scroll-to-section"><a href="order-status">Orders Status</a></li>
+                                    <li class="scroll-to-section"><a href="/logout">Logout</a></li>
+                                {{else}}
+                                    <li class="scroll-to-section"><a href="staff-login" id="login-color">Staff</a></li>
+                                {{/ifCond}}
+                            {{/ifCond}}
+
+                            <!-- Menu -->
+                            {{#ifCond active 'menu'}}
+                                <li class="scroll-to-section"><a href="/index">Home</a></li>
+                                <li class="scroll-to-section"><a href="menu" class="active">Menu</a></li>
+                                <li class="scroll-to-section"><a href="order-status">Orders</a></li>
+                                <li class="scroll-to-section"><a href="/logout">Logout</a></li>
+                            {{/ifCond}}
+
+                            <!-- Order Status -->
+                            {{#ifCond active 'order-status'}}
+                                <li class="scroll-to-section"><a href="/index">Home</a></li>
+                                <li class="scroll-to-section"><a href="menu">Menu</a></li>
+                                <li class="scroll-to-section"><a href="order-status" class="active">Orders</a></li>
+                                <li class="scroll-to-section"><a href="/logout">Logout</a></li>
+                            {{/ifCond}}
+
+                            <!-- Order Receipt -->
+                            {{#ifCond active 'order-receipt'}}
+                                <li class="scroll-to-section"><a href="/index">Home</a></li>
+                                <li class="scroll-to-section"><a href="menu">Menu</a></li>
+                                <li class="scroll-to-section"><a href="order-status">Orders</a></li>
+                            {{/ifCond}}
+
+                            <!-- Staff Page -->
+                            {{#ifCond active 'staff-page'}}
+                                <li class="scroll-to-section"><a href="staff-page" class="active">Manage Orders</a></li>
+                                <li class="scroll-to-section"><a href="/logout">Logout</a></li>
+                            {{/ifCond}}
+                        </ul>
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+<!-- ***** Header Area End ***** -->

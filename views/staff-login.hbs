@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+	<head>
+	<meta charset="utf-8">
+
+	<title>OSSU | Staff Login</title>
+
+	<link rel="stylesheet" href="/css/login_signup.css">
+	<link rel="icon" type="image/x-icon" href="/images/ossu-logo.png">
+	
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+	</head>
+
+	<body>
+		<div class="bg-img">
+			<div class="content">
+				<header>Staff Login Form</header>
+				<!-- Add this where you want the error message to appear -->
+				{{#if errorMessage}}
+					<div class="error-box">
+						{{errorMessage}}
+					</div>
+				{{/if}}
+				<form action="/staff-login" method="post">
+					<div class="field">
+						<span class="fa fa-user"></span>
+						<input type="text" required placeholder="Username" name="username" required>
+					</div>
+					<div class="field space">
+						<span class="fa fa-lock"></span>
+						<input type="password" class="pass-key" required placeholder="Password" name="password" required>
+						<span class="show">SHOW</span>
+					</div>
+					<br>
+					<div class="field">
+						<input type="submit" value="Login" name="submit">
+					</div>
+				</form>
+				<br>
+				<a href="/" class="return-home">Back to Home</a>
+			</div>
+		</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const passwordInput = document.querySelector(".pass-key");
+			const showButton = document.querySelector(".show");
+			
+			showButton.addEventListener("click", function () {
+			if (passwordInput.type === "password") {
+				passwordInput.type = "text";
+			} else {
+				passwordInput.type = "password";
+			}
+			});
+		});
+	</script>
+
+	</body>
+</html>
