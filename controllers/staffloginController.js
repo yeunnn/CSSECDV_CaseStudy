@@ -37,8 +37,8 @@ const staffloginController= {
             var result = await db.findMany(Order, {}, projection);
 
             if (response != null && (response.position == 'Admin' || response.position == 'Staff' || response.position == 'Customer')){
-                
-                bcrypt.compare(password, response.password, function(err, equal) {
+                console.log(response.password[0].password);
+                bcrypt.compare(password, response.password[0].password, function(err, equal) {
                     if(equal) {
                         // Store user information in the session
                         req.session.user = response.username;

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+	<head>
+	<meta charset="utf-8">
+
+	<title>OSSU | Customer </title>
+
+	<link rel="stylesheet" href="/css/login_signup.css">
+	<link rel="icon" type="image/x-icon" href="/images/ossu-logo.png">
+	
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+	</head>
+
+	<body>
+		<div class="bg-img">
+			<div class="content">
+				<header>Customer Registration</header>
+				<!-- Add this where you want the error message to appear -->
+				{{#if errorMessage}}
+					<div class="error-box">
+						{{errorMessage}}
+					</div>
+				{{/if}}
+				<form action="/customer-registration" method="post">
+					<div class="field">
+						<span class="fa fa-user"></span>
+						<input type="text" required placeholder="Username" name="username" required>
+					</div>
+					<div class="field space">
+						<span class="fa fa-lock"></span>
+						<input type="password" class="pass-key" required placeholder="Password" name="password" required>
+						<span class="show">SHOW</span>
+					</div>
+                    <div class="space return-home">
+						<div>
+							<h1 class="text-white"> Requirements: </h1>
+							<div class="text-white"> <span id="validatePL">❌</span> Minimum of 15 Character Length </div> 
+							<div class="text-white"> <span id="validateLC">❌</span>Atleast 1 lowercase character </div> 
+							<div class="text-white"> <span id="validateUC">❌</span> Atleast 1 uppercase character </div> 
+							<div class="text-white"> <span id="validateNC">❌</span> Atleast 1 numeric character</div> 
+						</div>
+					</div>
+					<br>
+					<div class="field">
+						<input type="submit" value="Login" name="submit">
+					</div>
+				</form>
+				<br>
+				<a href="/" class="return-home">Back to Home</a>
+			</div>
+		</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const passwordInput = document.querySelector(".pass-key");
+			const showButton = document.querySelector(".show");
+			
+			showButton.addEventListener("click", function () {
+			if (passwordInput.type === "password") {
+				passwordInput.type = "text";
+			} else {
+				passwordInput.type = "password";
+			}
+			});
+
+			//const passwordChecker = document.getElementById('password');
+			const minLength = document.getElementById('validatePL')
+			const minLowercase = document.getElementById('validateLC')
+			const minUppercase = document.getElementById('validateUC')
+			const minNumeric = document.getElementById('validateNC')
+		
+			console.log(minLength.textContent);
+			let timeoutId;
+
+			passwordInput.addEventListener('input', () => {
+				clearTimeout(timeoutId);
+				timeoutId = setTimeout(() => {
+					const password = passwordInput.value;
+
+					//AJAX✅ 
+					fetch('/validate-password', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json'},
+						body: JSON.stringify({ password })
+					})
+					.then(res => res.json())
+					.then(data => {
+						console.log(data.validated);
+						const response = data.validated;
+						///PL, LC, UC, NC
+						if(response[0] == true) {minLength.textContent = "✅";}
+						else {minLength.textContent = "❌";}
+
+						if(response[1] == true) {minLowercase.textContent = "✅";}
+						else {minLowercase.textContent = "❌";}
+
+						if(response[2] == true) {minUppercase.textContent = "✅";}
+						else {minUppercase.textContent = "❌";}
+
+						if(response[3] == true) {minNumeric.textContent = "✅";}
+						else {minNumeric.textContent = "❌";}
+					})
+				}, 300)
+			})
+		});
+
+		
+
+
+	</script>
+
+	</body>
+</html>

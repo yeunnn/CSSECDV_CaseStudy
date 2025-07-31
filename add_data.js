@@ -16,9 +16,12 @@ async function add(){
 
     bcrypt.hash(pw1, saltRounds, function(err, hash) {
         // Store hash in your password DB.
+        var passwordSchema = {
+            password: hash
+        }
         var UserSchema = {
             username: user1,
-            password: hash,
+            password: passwordSchema,
             position: pos1
         }
 
@@ -36,6 +39,9 @@ async function add(){
 
     bcrypt.hash(pw2, saltRounds, function(err, hash) {
         // Store hash in your password DB.
+        var passwordSchema = {
+            password: hash
+        }
         var UserSchema = {
             username: user2,
             password: hash,
@@ -57,6 +63,9 @@ async function add(){
 
     bcrypt.hash(pw3, saltRounds, function(err, hash) {
         // Store hash in your password DB.
+        var passwordSchema = {
+            password: hash
+        }
         var UserSchema = {
             username: user3,
             password: hash,
@@ -77,6 +86,9 @@ async function add(){
 
     bcrypt.hash(pw4, saltRounds, function(err, hash) {
         // Store hash in your password DB.
+        var passwordSchema = {
+            password: hash
+        }
         var UserSchema = {
             username: user4,
             password: hash,
@@ -97,6 +109,9 @@ async function add(){
 
     bcrypt.hash(pw5, saltRounds, function(err, hash) {
         // Store hash in your password DB.
+        var passwordSchema = {
+            password: hash
+        }
         var UserSchema = {
             username: user5,
             password: hash,
