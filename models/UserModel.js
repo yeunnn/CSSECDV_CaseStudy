@@ -12,6 +12,17 @@ var passwordSchema = new mongoose.Schema({
     }
 })
 
+var resetQuestions = new mongoose.Schema({
+    question: {
+        type: String,
+        required: true
+    },
+    answer: {
+        type:String,
+        required: true
+    }   
+});
+
 // defines the schema for collection `users`
 var UserSchema = new mongoose.Schema({
     username: {
@@ -23,6 +34,7 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    security: [resetQuestions],
     failedAttempts: {
         type: Number,
         default: 0,

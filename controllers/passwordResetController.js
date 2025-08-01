@@ -14,24 +14,13 @@ const Log = require('../models/serverLog.js');
 // import module `bcrypt`
 const bcrypt = require('bcrypt');
 
-const registrationController= {
+const passwordResetController= {
 
-    getCustomerRegistration: function (req, res) {
-        res.render('customer-registration');
+    getPasswordReset: function (req, res) {
+        res.render('password-reset');
     },
 
-    postPasswordValidation: function(req, res) {
-        const { password } = req.body;
-
-        var validated = pV.validatePassword(password);
-
-        //console.log(validated);
-
-        res.json( { validated } );
-
-    },
-
-    postCustomerRegistration: async function (req, res) {
+    postPasswordReset: async function (req, res) {
 
             /*
                 when submitting forms using HTTP POST method
@@ -42,11 +31,6 @@ const registrationController= {
             */
             var username = req.body.username;
             var password = req.body.password;
-            var secQ1 = req.body.secQ1;
-            var secQ1Ans = req.body.secQ1Ans;
-            var secQ2 = req.body.secQ2;
-            var secQ2Ans = req.body.secQ2Ans;
-            
 
             //secondary checks
             var validated = pV.validatePassword(password);
@@ -63,19 +47,6 @@ const registrationController= {
 
             if (response == null) {
                 if (allTrue) {
-                    if (secQ1Ans == null || secQ2Ans == null) {
-                        //no security answers
-                        var logEntry = {
-                            username: username,
-                            timestamp: Date.now(),
-                            logType: 'Failure',
-                            functionType: 'postCustomerRegistration',
-                            description: `User lacks answers to security questions`
-                        };
-                    
-                        var logged = await db.insertOne(Log, logEntry);
-                        res.render('customer-registration', {errorMessage: 'Lacking answers to security questions.'})
-                    }
                     const saltRounds = 10;
                     const position = 'Customer';
                     bcrypt.hash(password, saltRounds, async function(err, hash) {
@@ -83,25 +54,10 @@ const registrationController= {
                         var passwordSchema = {
                             password: hash
                         }
-                        //store hashed answers
-                        const firstAns = await bcrypt.hash(secQ1Ans, saltRounds);
-                        const secondAns = await bcrypt.hash(secQ2Ans, saltRounds);
-                        var resetQuestions = [
-                            {
-                                question: secQ1,
-                                answer: firstAns
-                            },
-                            {
-                                question: secQ2,
-                                answer: secondAns
-                            }
-                        ]
-                        //Store as new user
                         var UserSchema = {
                             username: username,
                             password: passwordSchema,
-                            position: position,
-                            security: resetQuestions
+                            position: position
                         }
             
                         var response = await db.insertOne(User, UserSchema);

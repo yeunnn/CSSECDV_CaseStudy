@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 
 const logSchema = new mongoose.Schema({
     username: {
+        type: String
+    },
+    logType: {
         type: String,
+        enum: ['Success', 'Failure'],
         required: true
     },
     timestamp: {

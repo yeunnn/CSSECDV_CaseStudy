@@ -15,7 +15,7 @@
 
 	<body>
 		<div class="bg-img">
-			<div class="content">
+			<div class="content" style="overflow: hidden">
 				<header>Customer Registration</header>
 				<!-- Add this where you want the error message to appear -->
 				{{#if errorMessage}}
@@ -43,8 +43,37 @@
 						</div>
 					</div>
 					<br>
+					<div>
+						<label for="role" class="return-home">Select your first security question:</label>
+						<br>
+						<select name="secQ1" id="secQ1">
+  							<option value="What was the name of your first pet?">What was the name of your first pet?</option>
+  							<option value="What was the first video game you played?">What was the first video game you played?</option>
+  							<option value="What is your favorite food?">What is your favorite food?</option>
+							<option value="What is your favorite book?">What is your favorite book?</option>
+						</select>
+						<div class="field">
+							<span class="fa fa-user"></span>
+							<input type="text" required placeholder="Answer..." name="secQ1Ans" required>
+						</div>
+						<br>
+						<label for="role" class="return-home">Select your second security question:</label>
+						<br>
+						<select name="secQ2" id="secQ2">
+  							<option value="What was your dream job as a child?">What was your dream job as a child?</option>
+  							<option value="What was your favorite subject in high school?">What was your favorite subject in high school?</option>
+  							<option value="What was your least favorite food as a child?">What was your least favorite food as a child?</option>
+							<option value="What was the first social event you went to?">What was the first social event you went to?</option>
+						</select>
+						<div class="field">
+							<span class="fa fa-user"></span>
+							<input type="text" required placeholder="Answer..." name="secQ2Ans" required>
+						</div>
+						<br>
+					</div>
+					
 					<div class="field">
-						<input type="submit" value="Login" name="submit">
+						<input type="submit" value="Register" name="submit">
 					</div>
 				</form>
 				<br>
