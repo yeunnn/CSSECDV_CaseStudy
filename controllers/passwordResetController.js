@@ -31,9 +31,15 @@ const passwordResetController= {
             var passwordArr = response.password;
             passwordArr.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
             const msInOneDay = 24 * 60 * 60 * 1000;
-            if(passwordArr[0].timestamp + msInOneDay >= Date.now()) {
+            var latestPasswordTS = new Date(passwordArr[0].timestamp)
+            console.log('Latest Pass TS: ' + latestPasswordTS.getTime());
+            console.log('Now: ' + Date.now())
+
+            if(latestPasswordTS.getTime() + msInOneDay > Date.now()) {
                 //re-render and tell user they cannot reset yet
-                res.render('password-reset-1', {errorMessage: 'Cannot reset account\'s password.'});
+                console.log('Not a day has passed.');
+                res.render('password-reset-step1', {errorMessage: 'Cannot reset account\'s password.'});
+                return;
             } 
             var logEntry = {
                 username: response.username,
@@ -107,7 +113,6 @@ const passwordResetController= {
         var password = req.body.password;
         var confirmPassword = req.body.confirmPassword;
 
-        console.log(password);
         if (password != confirmPassword) {
             var logEntry = {
                 username: response.username,
@@ -121,7 +126,7 @@ const passwordResetController= {
             res.render('password-reset-step3', {errorMessage: 'Password and Confirm Password are not matching.'})
         }
 
-        var response = db.findOne(User, {username: username}, 'username password failedAttempts lockedUntil');
+        var response = await db.findOne(User, {username: username}, 'username password failedAttempts lockedUntil');
         if (response) {
             //do checks
             //check for password reuse
@@ -142,6 +147,7 @@ const passwordResetController= {
                     var logged = await db.insertOne(Log, logEntry);
                     console.log(logged);
                     res.render('password-reset-step3'), {username: username, errorMessage: 'Cannot reset account\'s password.'};
+                    return;
                 }
             }
             const saltRounds = 10;
@@ -184,6 +190,7 @@ const passwordResetController= {
 
                 var logged = await db.insertOne(Log, logEntry);
                 res.render('password-reset-step3', {username: username});
+                return;
             }
             
             
