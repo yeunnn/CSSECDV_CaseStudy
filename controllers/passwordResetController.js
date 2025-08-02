@@ -24,9 +24,17 @@ const passwordResetController= {
         //check if user exists
         var username = req.body.username;
 
-        var response = await db.findOne(User, {username: username}, 'username security');
+        var response = await db.findOne(User, {username: username}, 'username password security');
 
         if (response) {
+            //check if a day has passed since the last reset
+            var passwordArr = response.password;
+            passwordArr.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+            const msInOneDay = 24 * 60 * 60 * 1000;
+            if(passwordArr[0].timestamp + msInOneDay >= Date.now()) {
+                //re-render and tell user they cannot reset yet
+                res.render('password-reset-1', {errorMessage: 'Cannot reset account\'s password.'});
+            } 
             var logEntry = {
                 username: response.username,
                 timestamp: Date.now(),
@@ -105,17 +113,37 @@ const passwordResetController= {
                 username: response.username,
                 timestamp: Date.now(),
                 logType: 'Failure',
-                functionType: 'postPasswordResetStep3',
+                functionType: 'postPasswordResetStepFinal',
                 description: `${response.username} step 3 of password reset failed.`
             };
         
             var logged = await db.insertOne(Log, logEntry);
-            res.render('password-reset-step-3', {errorMessage: 'Password and Confirm Password are not matching.'})
+            res.render('password-reset-step3', {errorMessage: 'Password and Confirm Password are not matching.'})
         }
 
-        var response = db.findOne(User, {username: username}, 'username failedAttempts lockedUntil');
+        var response = db.findOne(User, {username: username}, 'username password failedAttempts lockedUntil');
         if (response) {
             //do checks
+            //check for password reuse
+            var passwordArr = response.password;
+            passwordArr.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+            for (let index = 0; index < passwordArr.length; index++) {
+                const prevPassword = passwordArr[index].password;
+                var match = await bcrypt.compare(password, prevPassword);
+                if(match) {
+                    var logEntry = {
+                        username: response.username,
+                        timestamp: Date.now(),
+                        logType: 'Failure',
+                        functionType: 'postPasswordResetStepFinal',
+                        description: `${username} attempted to reuse passwords.`
+                    };
+                
+                    var logged = await db.insertOne(Log, logEntry);
+                    console.log(logged);
+                    res.render('password-reset-step3'), {username: username, errorMessage: 'Cannot reset account\'s password.'};
+                }
+            }
             const saltRounds = 10;
             var hash = await bcrypt.hash(password, saltRounds);
             var update = {
