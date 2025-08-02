@@ -17,6 +17,7 @@ const logoutController = require('../controllers/logoutController.js');
 
 const menupublicController = require('../controllers/menupublicController.js');
 const registrationController = require('../controllers/registrationController.js');
+const passwordResetController = require('../controllers/passwordResetController.js');
 
 const app = express();
 
@@ -50,6 +51,12 @@ app.post('/staff-login', staffloginController.postStaffLogin);
 app.get('/customer-registration', registrationController.getCustomerRegistration)
 app.post('/customer-registration', registrationController.postCustomerRegistration)
 app.post('/validate-password', registrationController.postPasswordValidation)
+
+//password reset
+app.get('/password-reset-1', passwordResetController.getPasswordResetStep1)
+app.post('/password-reset-2', passwordResetController.postPasswordResetStep2)
+app.post('/password-reset-3', passwordResetController.postPasswordResetStep3)
+app.post('/password-reset-final', passwordResetController.postPasswordResetFinal)
 
 app.get('/staff-page', staffpageController.getStaffPage);
 
