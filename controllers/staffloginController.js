@@ -40,12 +40,10 @@ const staffloginController= {
 
             if (response != null && (response.position == 'Admin' || response.position == 'Staff' || response.position == 'Customer')){
                 //lock check
-                console.log(response);
+                //console.log(response);
                 if(response.lockedUntil != null && response.lockedUntil >= Date.now()) {
                     res.render('staff-login', { errorMessage: 'Account is locked, you are currently unable to attempt to login.'});
                 } else {
-                    // console.log(response);
-                    //check for locks and failedAttempts reset
                     if (response.lockedUntil != null && response.lockedUntil < Date.now()) {
                         //set to null - basic reset
                         var unlock = await db.updateOne(User, {username: username}, {$set: {lockedUntil: null}});
@@ -61,7 +59,13 @@ const staffloginController= {
                         
                         var logged = await db.insertOne(Log, logEntry);
                     }
-                    bcrypt.compare(password, response.password[0].password, async function(err, equal) {
+                    //sort password
+                    var passwordArr = response.password;
+                    passwordArr.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                    console.log(passwordArr);
+
+                    bcrypt.compare(password, passwordArr[0].password, async function(err, equal) {
                         if(equal) {
                             // Store user information in the session
                             if(response.failedAttempts > 0 && response.lockedUntil == null) {
