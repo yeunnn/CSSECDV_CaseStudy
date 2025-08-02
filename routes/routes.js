@@ -15,7 +15,8 @@ const staffpageController = require('../controllers/staffpageController.js');
 // import module `logoutController` from `../controllers/logoutController.js`
 const logoutController = require('../controllers/logoutController.js');
 
-const menupublicController = require('../controllers/menupublicController.js')
+const menupublicController = require('../controllers/menupublicController.js');
+const registrationController = require('../controllers/registrationController.js');
 
 const app = express();
 
@@ -44,6 +45,11 @@ app.get('/order-status', orderstatusController.getOrderStatus);
 
 app.get('/staff-login', staffloginController.getStaffLogin);
 app.post('/staff-login', staffloginController.postStaffLogin);
+
+//registration
+app.get('/customer-registration', registrationController.getCustomerRegistration)
+app.post('/customer-registration', registrationController.postCustomerRegistration)
+app.post('/validate-password', registrationController.postPasswordValidation)
 
 app.get('/staff-page', staffpageController.getStaffPage);
 

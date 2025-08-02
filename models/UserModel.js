@@ -1,19 +1,47 @@
 // import module `mongoose`
 var mongoose = require('mongoose');
 
+var passwordSchema = new mongoose.Schema({
+    password: {
+        type: String,
+        required: true
+    },
+    timestamp: {
+        type: Date,
+        default: Date.now(),
+    }
+})
+
+var resetQuestions = new mongoose.Schema({
+    question: {
+        type: String,
+        required: true
+    },
+    answer: {
+        type:String,
+        required: true
+    }   
+});
+
 // defines the schema for collection `users`
 var UserSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true
     },
-    password: {
-        type: String,
-        required: true
-    },
+    password: [passwordSchema],
     position: {
         type: String,
         required: true
+    },
+    security: [resetQuestions],
+    failedAttempts: {
+        type: Number,
+        default: 0,
+    },
+    lockedUntil: {
+        type: Date,
+        default: null
     }
 });
 

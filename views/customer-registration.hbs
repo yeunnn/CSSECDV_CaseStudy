@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+	<head>
+	<meta charset="utf-8">
+
+	<title>OSSU | Customer </title>
+
+	<link rel="stylesheet" href="/css/login_signup.css">
+	<link rel="icon" type="image/x-icon" href="/images/ossu-logo.png">
+	
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+	</head>
+
+	<body>
+		<div class="bg-img">
+			<div class="content" style="overflow: hidden">
+				<header>Customer Registration</header>
+				<!-- Add this where you want the error message to appear -->
+				{{#if errorMessage}}
+					<div class="error-box">
+						{{errorMessage}}
+					</div>
+				{{/if}}
+				<form action="/customer-registration" method="post">
+					<div class="field">
+						<span class="fa fa-user"></span>
+						<input type="text" required placeholder="Username" name="username" required>
+					</div>
+					<div class="field space">
+						<span class="fa fa-lock"></span>
+						<input type="password" class="pass-key" required placeholder="Password" name="password" required>
+						<span class="show">SHOW</span>
+					</div>
+                    <div class="space return-home">
+						<div>
+							<h1 class="text-white"> Requirements: </h1>
+							<div class="text-white"> <span id="validatePL">❌</span> Minimum of 15 Character Length </div> 
+							<div class="text-white"> <span id="validateLC">❌</span>Atleast 1 lowercase character </div> 
+							<div class="text-white"> <span id="validateUC">❌</span> Atleast 1 uppercase character </div> 
+							<div class="text-white"> <span id="validateNC">❌</span> Atleast 1 numeric character</div> 
+						</div>
+					</div>
+					<br>
+					<div>
+						<label for="role" class="return-home">Select your first security question:</label>
+						<br>
+						<select name="secQ1" id="secQ1">
+  							<option value="What was the name of your first pet?">What was the name of your first pet?</option>
+  							<option value="What was the first video game you played?">What was the first video game you played?</option>
+  							<option value="What is your favorite food?">What is your favorite food?</option>
+							<option value="What is your favorite book?">What is your favorite book?</option>
+						</select>
+						<div class="field">
+							<span class="fa fa-user"></span>
+							<input type="text" required placeholder="Answer..." name="secQ1Ans" required>
+						</div>
+						<br>
+						<label for="role" class="return-home">Select your second security question:</label>
+						<br>
+						<select name="secQ2" id="secQ2">
+  							<option value="What was your dream job as a child?">What was your dream job as a child?</option>
+  							<option value="What was your favorite subject in high school?">What was your favorite subject in high school?</option>
+  							<option value="What was your least favorite food as a child?">What was your least favorite food as a child?</option>
+							<option value="What was the first social event you went to?">What was the first social event you went to?</option>
+						</select>
+						<div class="field">
+							<span class="fa fa-user"></span>
+							<input type="text" required placeholder="Answer..." name="secQ2Ans" required>
+						</div>
+						<br>
+					</div>
+					
+					<div class="field">
+						<input type="submit" value="Register" name="submit">
+					</div>
+				</form>
+				<br>
+				<a href="/" class="return-home">Back to Home</a>
+				<br>
+				<a href="/staff-login" class="return-home">Already have an account?</a>
+			</div>
+		</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const passwordInput = document.querySelector(".pass-key");
+			const showButton = document.querySelector(".show");
+			
+			showButton.addEventListener("click", function () {
+			if (passwordInput.type === "password") {
+				passwordInput.type = "text";
+			} else {
+				passwordInput.type = "password";
+			}
+			});
+
+			//const passwordChecker = document.getElementById('password');
+			const minLength = document.getElementById('validatePL')
+			const minLowercase = document.getElementById('validateLC')
+			const minUppercase = document.getElementById('validateUC')
+			const minNumeric = document.getElementById('validateNC')
+		
+			console.log(minLength.textContent);
+			let timeoutId;
+
+			passwordInput.addEventListener('input', () => {
+				clearTimeout(timeoutId);
+				timeoutId = setTimeout(() => {
+					const password = passwordInput.value;
+
+					//AJAX✅ 
+					fetch('/validate-password', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json'},
+						body: JSON.stringify({ password })
+					})
+					.then(res => res.json())
+					.then(data => {
+						console.log(data.validated);
+						const response = data.validated;
+						///PL, LC, UC, NC
+						if(response[0] == true) {minLength.textContent = "✅";}
+						else {minLength.textContent = "❌";}
+
+						if(response[1] == true) {minLowercase.textContent = "✅";}
+						else {minLowercase.textContent = "❌";}
+
+						if(response[2] == true) {minUppercase.textContent = "✅";}
+						else {minUppercase.textContent = "❌";}
+
+						if(response[3] == true) {minNumeric.textContent = "✅";}
+						else {minNumeric.textContent = "❌";}
+					})
+				}, 300)
+			})
+		});
+
+		
+
+
+	</script>
+
+	</body>
+</html>

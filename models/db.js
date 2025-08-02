@@ -92,8 +92,10 @@ const database = {
     deleteMany: async function(model, conditions) {
         return await model.deleteMany(conditions);
     }
-
 }
+
+
+
 
 /*
     exports the object `database` (defined above)
