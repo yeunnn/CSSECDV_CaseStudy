@@ -42,6 +42,15 @@ var UserSchema = new mongoose.Schema({
     lockedUntil: {
         type: Date,
         default: null
+    },
+    // New fields for last login tracking (requirement 2.1.12)
+    lastSuccessfulLogin: {
+        type: Date,
+        default: null
+    },
+    lastLoginAttempt: {
+        type: Date,
+        default: null
     }
 });
 

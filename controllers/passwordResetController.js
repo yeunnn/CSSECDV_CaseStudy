@@ -17,7 +17,11 @@ const bcrypt = require('bcrypt');
 const passwordResetController= {
 
     getPasswordResetStep1: function (req, res) {
-        res.render('password-reset-step1');
+        // Pass user session information for proper navigation context
+        res.render('password-reset-step1', {
+            user: req.session.user,
+            position: req.session.position
+        });
     },
 
     postPasswordResetStep2: async function (req, res) {
@@ -38,7 +42,7 @@ const passwordResetController= {
             if(latestPasswordTS.getTime() + msInOneDay > Date.now()) {
                 //re-render and tell user they cannot reset yet
                 console.log('Not a day has passed.');
-                res.render('password-reset-step1', {errorMessage: 'Cannot reset account\'s password.'});
+                res.render('password-reset-step1', {errorMessage: 'Cannot reset account\'s password.', user: req.session.user, position: req.session.position});
                 return;
             } 
             var logEntry = {
@@ -53,7 +57,7 @@ const passwordResetController= {
             res.render('password-reset-step2', {username: username, secQ1: response.security[0].question, secQ2: response.security[1].question});
         } else {
             var logEntry = {
-                username: response.username,
+                username: username,
                 timestamp: Date.now(),
                 logType: 'Failure',
                 functionType: 'postPasswordResetStep2',
@@ -61,7 +65,11 @@ const passwordResetController= {
             };
         
             var logged = await db.insertOne(Log, logEntry);
-            res.render('password-reset-step2', {errorMessage: 'Invalid username.'});
+            res.render('password-reset-step1', {
+                errorMessage: 'Invalid username.',
+                user: req.session.user,
+                position: req.session.position
+            });
         }
     },
 
@@ -92,7 +100,7 @@ const passwordResetController= {
                 };
             
                 var logged = await db.insertOne(Log, logEntry);
-                res.render('password-reset-step3', {username: response.username});
+                res.render('password-reset-step3', {username: response.username, user: req.session.user, position: req.session.position});
             } else {
                 var logEntry = {
                     username: response.username,
@@ -103,7 +111,7 @@ const passwordResetController= {
                 };
             
                 var logged = await db.insertOne(Log, logEntry);
-                res.render('password-reset-step3', {username: response.username, errorMessage: 'Atleast one of the answers are wrong.'});
+                res.render('password-reset-step2', {username: response.username, errorMessage: 'Atleast one of the answers are wrong.', user: req.session.user, position: req.session.position});
             }
         }
     },
@@ -115,11 +123,11 @@ const passwordResetController= {
 
         if (password != confirmPassword) {
             var logEntry = {
-                username: response.username,
+                username: username,
                 timestamp: Date.now(),
                 logType: 'Failure',
                 functionType: 'postPasswordResetStepFinal',
-                description: `${response.username} step 3 of password reset failed.`
+                description: `${username} step 3 of password reset failed.`
             };
         
             var logged = await db.insertOne(Log, logEntry);
@@ -137,7 +145,7 @@ const passwordResetController= {
                 var match = await bcrypt.compare(password, prevPassword);
                 if(match) {
                     var logEntry = {
-                        username: response.username,
+                        username: username,
                         timestamp: Date.now(),
                         logType: 'Failure',
                         functionType: 'postPasswordResetStepFinal',
@@ -146,7 +154,7 @@ const passwordResetController= {
                 
                     var logged = await db.insertOne(Log, logEntry);
                     console.log(logged);
-                    res.render('password-reset-step3'), {username: username, errorMessage: 'Cannot reset account\'s password.'};
+                    res.render('password-reset-step3', {username: username, errorMessage: 'Cannot reset account\'s password.', user: req.session.user, position: req.session.position } );
                     return;
                 }
             }
@@ -189,7 +197,7 @@ const passwordResetController= {
         
 
                 var logged = await db.insertOne(Log, logEntry);
-                res.render('password-reset-step3', {username: username});
+                res.render('password-reset-step3', {username: username, user: req.session.user, position: req.session.position});
                 return;
             }
             

@@ -141,6 +141,22 @@
     <!-- Global Init -->
     <script src="/js/staff-page.js"></script>
     <script src="/js/custom.js"></script>
+    
+    <!-- Login Notification Script -->
+    <script src="/js/login-notification.js"></script>
+    <script>
+        // Set login notification variables for the popup
+        {{#if showLoginNotification}}
+        window.showLoginNotification = true;
+        window.lastLoginInfo = {
+            date: "{{lastLoginInfo.date}}",
+            ip: "{{lastLoginInfo.ip}}"
+        };
+        {{else}}
+        window.showLoginNotification = false;
+        {{/if}}
+    </script>
+    
     <script>
 
         $(function() {
@@ -158,6 +174,6 @@
         });
 
     </script>
-    
+
     </body>
 </html>

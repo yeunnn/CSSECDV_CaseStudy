@@ -314,5 +314,20 @@
         });
 
     </script>
-  </body>
+
+    <!-- Login Notification Script for Customer Users -->
+    <script src="/js/login-notification.js"></script>
+    <script>
+        // Set login notification variables for the popup
+        {{#if showLoginNotification}}
+        window.showLoginNotification = true;
+        window.lastLoginInfo = {
+            date: "{{lastLoginInfo.date}}"
+        };
+        {{else}}
+        window.showLoginNotification = false;
+        {{/if}}
+    </script>
+
+    </body>
 </html>
