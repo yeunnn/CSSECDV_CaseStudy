@@ -32,6 +32,7 @@ var UserSchema = new mongoose.Schema({
     password: [passwordSchema],
     position: {
         type: String,
+        enum: ['Staff', 'Admin', 'Customer'],
         required: true
     },
     security: [resetQuestions],
@@ -40,6 +41,10 @@ var UserSchema = new mongoose.Schema({
         default: 0,
     },
     lockedUntil: {
+        type: Date,
+        default: null
+    },
+    deletedAt: {
         type: Date,
         default: null
     }
