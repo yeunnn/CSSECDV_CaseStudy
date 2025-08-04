@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  	<head>
+	
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/images/ossu-logo.png">
+
+    <title>OSSU | Menu</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.css">
+
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <link rel="stylesheet" href="/css/owl-carousel.css">
+
+    <link rel="stylesheet" href="/css/lightbox.css">
+
+    <link rel="stylesheet" href="/css/order-style.css">
+    
+    <style>
+        h1 {
+            color: #333;
+        }
+
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .toolbox {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .menu-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 230px;
+        }
+
+        .menu-item img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .categories {
+            padding: 5px;
+        }
+
+        .cart-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 20px;
+            width: 600px;
+            margin-left: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .cart-item img {
+            max-width: 50px;
+            max-height: 50px;
+            margin-right: 10px;
+        }
+
+        button {
+            margin: 5px;
+        }
+
+        .menu-item input {
+            width: 30px;
+            text-align: center;
+        }
+
+        .cart-container h2 {
+            border-bottom: 1px solid #000; /* You can adjust the color and style of the line */
+            padding-bottom: 5px; /* Adjust the padding as needed */
+        }
+
+        input[type='number']{
+            width: 40px;
+        }
+
+        .table-no-style {
+            float: right;
+        }
+    </style>
+
+    </head>
+
+    <body>
+    
+    <!-- ***** Header Area Start ***** -->
+        <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Logo Start ***** -->
+                        <a href="#top" class="logo">
+                            <img src="/images/ossu-logo.png" width="60px" height="60px">
+                        </a>
+                        <!-- ***** Logo End ***** -->
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <li class="scroll-to-section"><a href="staff-page">Manage Orders</a></li>
+                            <li class="scroll-to-section"><a href="/admin-dashboard" class="active">Dashboard</a></li>
+                            <li class="scroll-to-section"><a href="/logout">Logout</a></li>
+                        </ul>
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+    <div id="top">
+        <div class="container-fluid">
+        </div>
+    </div>
+
+    <!-- ***** Menu Starts Here ***** -->
+    <section class="section" id="header-fix-section">
+        <div class="container">
+            <div class="section-heading">
+                <h6>ADMIN DASHBOARD</h6>
+                <h2>Main Menu</h2>
+            </div>
+            <div class="categories">
+                <button id="acctManager">Account Management</button>
+                <button id="logManager">Log Reader</button>
+            </div>
+            <br>
+            {{#if errorMessage}}
+                <div class="error-box">
+					{{errorMessage}}
+				</div>
+            {{/if}}
+            {{#if success}}
+                <div style="color: green;">
+					{{success}}
+			    </div>
+            {{/if}}
+            <dialog id="acctDialog">
+                <form method="post" id="updateForm">
+                <label>Username: <input type="text" name="modalUsername" id="modalUsername" value="" readonly/></label>
+                <br>
+                <select name="roles" id="roles">
+  					<option value="Staff">Staff</option>
+  					<option value="Admin">Admin</option>
+				</select>
+                <div class="toolbox">
+                    <button type="submit" formaction="/delete-account">Delete</button>
+                    <button type="submit" formaction="/update-roles">Update</button>
+                </div>
+                </form>
+                <button id="closeDialog">Close</button>
+            </dialog>
+            <button id="addAcct"> Create Acc </button>
+            <dialog id="createDialog">
+                <form method="post" id="createAccForm">
+                <div class="field">
+						<span class="fa fa-user"></span>
+						<input type="text" required placeholder="Username" name="username" required>
+					</div>
+					<div class="field space">
+						<span class="fa fa-lock"></span>
+						<input type="password" class="pass-key" required placeholder="Password" name="password" required>
+						<span class="show">SHOW</span>
+					</div>
+                    <select name="roles" id="roles">
+  					    <option value="Staff">Staff</option>
+  					    <option value="Admin">Admin</option>
+				    </select>
+                    <div class="space">
+						<div>
+							<h6> Requirements: </h6>
+							<div> <span id="validatePL">❌</span> Minimum of 15 Character Length </div> 
+							<div> <span id="validateLC">❌</span>Atleast 1 lowercase character </div> 
+							<div> <span id="validateUC">❌</span> Atleast 1 uppercase character </div> 
+							<div> <span id="validateNC">❌</span> Atleast 1 numeric character</div> 
+						</div>
+					</div>
+					<br>
+                <div class="toolbox">
+                    <button type="submit" formaction="/create-account">Create</button>
+                </div>
+                </form>
+                <button id="closeDialog2">Close</button>
+            </dialog>
+            <div id="menu" class="menu-container"></div>
+            <br>
+            <div id="pagination"></div>
+        </div>
+    </section>
+    
+    <!-- ***** Menu Ends Here ***** -->
+
+    <!-- ***** Footer Start ***** -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-xs-12">
+                    <div class="right-text-content">
+                            <ul class="social-icons">
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                            </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="logo">
+                        <a href="#top"><img src="/images/ossu-logo-new.png" alt="" width="170px" height="55px"></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs-12">
+                    <div class="left-text-content">
+                        <p>© Copyright OSSU.
+                        
+                        <br>All Rights Reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/js/jquery-2.1.0.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="/js/popper.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <!-- Plugins -->
+    <script src="/js/owl-carousel.js"></script>
+    <script src="/js/accordions.js"></script>
+    <script src="/js/datepicker.js"></script>
+    <script src="/js/scrollreveal.min.js"></script>
+    <script src="/js/waypoints.min.js"></script>
+    <script src="/js/jquery.counterup.min.js"></script>
+    <script src="/js/imgfix.min.js"></script> 
+    <script src="/js/slick.js"></script> 
+    <script src="/js/lightbox.js"></script> 
+    <script src="/js/isotope.js"></script> 
+    
+    <!-- Global Init -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () { 
+            //logic required here
+            const acctManager = document.getElementById('acctManager');
+            const logManager = document.getElementById('logManager');
+
+            const modifiableContainer = document.getElementById('menu');
+            const acctModal = document.getElementById('acctDialog');
+            const createModal = document.getElementById('createDialog');
+            const modalUsername = document.getElementById('modalUsername');
+            const closeBtn = document.getElementById('closeDialog');
+            const closeBtn2 = document.getElementById('closeDialog2');
+            const form = document.getElementById('updateForm');
+
+            const itemsPerPage = 10;
+            
+            closeBtn.addEventListener('click', () => {
+                acctModal.close();
+            });
+
+            closeBtn2.addEventListener('click', () => {
+                createModal.close();
+            });
+            
+            const addAcctModal = document.getElementById('createDialog');
+            const addAcct = document.getElementById('addAcct');
+            addAcct.addEventListener('click', () => {
+                addAcctModal.show();
+            });
+
+            function renderPages(query, data) {
+                const paginationContainer = document.getElementById('pagination');
+                paginationContainer.innerHTML = '';
+
+                const totalPages = Math.ceil(data.length / itemsPerPage);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.textContent = i;
+                    pageButton.addEventListener('click', () => {
+                        currentPage = i;
+                        renderMenu(currentPage, query);
+                    });
+                    paginationContainer.appendChild(pageButton);
+                }
+            };
+
+            function renderMenu(pageNumber, query) {
+                if(query == 'accounts') {
+                    modifiableContainer.innerHTML = '';
+                    fetch('/get-accounts')
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        //TO-DO: add error checker for null data
+                        const startIndex = (pageNumber - 1) * itemsPerPage;
+                        const endIndex = pageNumber * itemsPerPage;
+                        
+                        for(let i = startIndex; i < endIndex && i < data.length; i++) {
+                            const item = data[i];
+                            const account = document.createElement('div');
+                            account.classList.add('menu-item');
+
+                            const username = document.createElement('h2');
+                            username.textContent = item.username;
+                            account.appendChild(username);
+
+                            if(item.deletedAt) {
+                                const deletedAt = document.createElement('p');
+                                deletedAt.textContent = item.deletedAt;
+                                account.appendChild(deletedAt);
+                            }
+
+                            const position = document.createElement('p');
+                            position.textContent = item.position;
+                            account.appendChild(position);
+
+                            account.addEventListener('click', () => {
+                                //modify an existing form that's normally hidden
+                                modalUsername.value = username.textContent;
+                                
+                                acctModal.show();
+                            });
+
+                            modifiableContainer.append(account);
+                        }
+                        renderPages(query, data);
+                    });
+                    //switching pages/first
+                } else if (query == 'logs') {
+                    fetch('/get-logs')
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        //TO-DO: add error checker for null data
+                        const startIndex = (pageNumber - 1) * itemsPerPage;
+                        const endIndex = pageNumber * itemsPerPage;
+                        for(let i = startIndex; i < endIndex && i < data.length; i++) {
+                            const item = data[i];
+                            const log = document.createElement('div');
+                            log.classList.add('menu-item');
+
+                            const username = document.createElement('h2');
+                            username.textContent = item.username;
+                            log.appendChild(username);
+
+                            const logType = document.createElement('p');
+                            logType.textContent = item.logType;
+                            log.appendChild(logType);
+
+                            const timestamp = document.createElement('p');
+                            timestamp.textContent = item.timestamp;
+                            log.appendChild(timestamp);
+
+                            const functionType = document.createElement('p');
+                            functionType.textContent = item.functionType;
+                            log.appendChild(functionType);
+
+                            const description = document.createElement('p');
+                            description.textContent = item.description;
+                            log.appendChild(description);
+
+                            modifiableContainer.append(log);
+                        }
+                        renderPages(data);
+                    });
+                }
+                
+            }
+
+            /*function renderMenu(pageNumber, query) {
+                if(query == 'accounts') {
+                    modifiableContainer.innerHTML = '';
+                    if(currentPage == 'accounts') {
+                        console.log(storedData);
+                        
+                        //use stored data
+                        //TO-DO: add error checker for null data
+                        const startIndex = (pageNumber - 1) * itemsPerPage;
+                        const endIndex = pageNumber * itemsPerPage;
+                        for(let i = startIndex; i < endIndex && i < data.length; i++) {
+                            const item = storedData[i];
+                            const account = document.createElement('div');
+                            account.classList.add('menu-item');
+
+                            const username = document.createElement('h2');
+                            username.textContent = item.username;
+                            account.appendChild(username);
+
+                            const position = document.createElement('p');
+                            position.textContent = item.position;
+                            account.appendChild(position);
+
+                            modifiableContainer.append(account);
+                        }
+                    } else {
+                        fetch('/get-accounts')
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log(data);
+                            //TO-DO: add error checker for null data
+                            const startIndex = (pageNumber - 1) * itemsPerPage;
+                            const endIndex = pageNumber * itemsPerPage;
+                            storedData = data;
+                            for(let i = startIndex; i < endIndex && i < data.length; i++) {
+                                const item = data[i];
+                                const account = document.createElement('div');
+                                account.classList.add('menu-item');
+
+                                const username = document.createElement('h2');
+                                username.textContent = item.username;
+                                account.appendChild(username);
+
+                                const position = document.createElement('p');
+                                position.textContent = item.position;
+                                account.appendChild(position);
+
+                                modifiableContainer.append(account);
+                            }
+                            renderPages(query);
+                        });
+                        //switching pages/first
+                    }
+                } else if (query == 'logs') {
+                    fetch('/get-logs')
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        //TO-DO: add error checker for null data
+                        const startIndex = (pageNumber - 1) * itemsPerPage;
+                        const endIndex = pageNumber * itemsPerPage;
+                        for(let i = startIndex; i < endIndex && i < data.length; i++) {
+                            const item = data[i];
+                            const log = document.createElement('div');
+                            log.classList.add('menu-item');
+
+                            const username = document.createElement('h2');
+                            username.textContent = item.username;
+                            log.appendChild(username);
+
+                            const logType = document.createElement('p');
+                            logType.textContent = item.logType;
+                            log.appendChild(logType);
+
+                            const timestamp = document.createElement('p');
+                            timestamp.textContent = item.timestamp;
+                            log.appendChild(timestamp);
+
+                            const functionType = document.createElement('p');
+                            functionType.textContent = item.functionType;
+                            log.appendChild(functionType);
+
+                            const description = document.createElement('p');
+                            description.textContent = item.description;
+                            log.appendChild(description);
+
+                            modifiableContainer.append(log);
+                        }
+                        renderPages(data);
+                    });
+                }
+                
+            }*/
+
+            acctManager.addEventListener('click', () => {
+                //clear content
+                renderMenu(1, 'accounts');
+            });
+
+            logManager.addEventListener('click', () => {
+                modifiableContainer.innerHTML = '';
+                renderMenu(1, 'logs');
+            });
+
+            const passwordInput = document.querySelector(".pass-key");
+			const showButton = document.querySelector(".show");
+			
+			showButton.addEventListener("click", function () {
+			if (passwordInput.type === "password") {
+				passwordInput.type = "text";
+			} else {
+				passwordInput.type = "password";
+			}
+			});
+
+			//const passwordChecker = document.getElementById('password');
+			const minLength = document.getElementById('validatePL')
+			const minLowercase = document.getElementById('validateLC')
+			const minUppercase = document.getElementById('validateUC')
+			const minNumeric = document.getElementById('validateNC')
+		
+			console.log(minLength.textContent);
+			let timeoutId;
+
+			passwordInput.addEventListener('input', () => {
+				clearTimeout(timeoutId);
+				timeoutId = setTimeout(() => {
+					const password = passwordInput.value;
+
+					//AJAX✅ 
+					fetch('/validate-password', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json'},
+						body: JSON.stringify({ password })
+					})
+					.then(res => res.json())
+					.then(data => {
+						console.log(data.validated);
+						const response = data.validated;
+						///PL, LC, UC, NC
+						if(response[0] == true) {minLength.textContent = "✅";}
+						else {minLength.textContent = "❌";}
+
+						if(response[1] == true) {minLowercase.textContent = "✅";}
+						else {minLowercase.textContent = "❌";}
+
+						if(response[2] == true) {minUppercase.textContent = "✅";}
+						else {minUppercase.textContent = "❌";}
+
+						if(response[3] == true) {minNumeric.textContent = "✅";}
+						else {minNumeric.textContent = "❌";}
+					})
+				}, 300)
+			})
+
+
+        })
+    </script>
+    <script src="/js/custom.js"></script>
+    <script>
+
+        $(function() {
+            var selectedClass = "";
+            $("p").click(function(){
+            selectedClass = $(this).attr("data-rel");
+            $("#portfolio").fadeTo(50, 0.1);
+                $("#portfolio div").not("."+selectedClass).fadeOut();
+            setTimeout(function() {
+              $("."+selectedClass).fadeIn();
+              $("#portfolio").fadeTo(50, 1);
+            }, 500);
+                
+            });
+        });
+
+    </script>
+
+    </body>
+</html>

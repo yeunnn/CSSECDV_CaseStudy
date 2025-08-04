@@ -32,6 +32,7 @@ var UserSchema = new mongoose.Schema({
     password: [passwordSchema],
     position: {
         type: String,
+        enum: ['Staff', 'Admin', 'Customer'],
         required: true
     },
     security: [resetQuestions],
@@ -42,6 +43,9 @@ var UserSchema = new mongoose.Schema({
     lockedUntil: {
         type: Date,
         default: null
+    },
+    deletedAt: {
+      type: Date,
     },
     // New fields for last login tracking (requirement 2.1.12)
     lastSuccessfulLogin: {

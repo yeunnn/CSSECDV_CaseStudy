@@ -32,7 +32,6 @@ const registrationController= {
     },
 
     postCustomerRegistration: async function (req, res) {
-
             /*
                 when submitting forms using HTTP POST method
                 the values in the input fields are stored in `req.body` object
@@ -131,9 +130,9 @@ const registrationController= {
                         }
                     });
 
-                    //store data into session
-                    req.session.user = username;
-                    req.session.position = position;
+                    // //store data into session
+                    // req.session.user = username;
+                    // req.session.position = position;
 
                     res.render('index', {active:'index', position: position});
                 } else {

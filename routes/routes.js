@@ -18,6 +18,7 @@ const logoutController = require('../controllers/logoutController.js');
 const menupublicController = require('../controllers/menupublicController.js');
 const registrationController = require('../controllers/registrationController.js');
 const passwordResetController = require('../controllers/passwordResetController.js');
+const dashboardController = require('../controllers/adminDashboardController.js');
 
 // import middleware
 const authzMiddleware = require('../middleware/authz.js');
@@ -62,6 +63,19 @@ app.post('/password-reset-2', passwordResetController.postPasswordResetStep2)
 app.post('/password-reset-3', passwordResetController.postPasswordResetStep3)
 app.post('/password-reset-final', passwordResetController.postPasswordResetFinal)
 
+app.get('/admin-dashboard', dashboardController.getAdminDashbaord);
+app.get('/get-accounts', dashboardController.getAccounts);
+app.get('/get-logs', dashboardController.getLogs);
+app.post('/update-roles', dashboardController.postChangeRoles);
+app.post('/delete-account', dashboardController.postDeleteAccount);
+app.post('/create-account', dashboardController.postAddAccount);
+
+app.get('/staff-page', staffpageController.getStaffPage);
+
+// Update order status
+app.post('/update-order-status/:orderId', staffpageController.updateOrderStatus);
+// Delete order
+app.delete('/delete-order/:orderId', staffpageController.deleteOrder);
 // Change password routes for logged-in users (requires re-authentication)
 app.get('/change-password', 
     authzMiddleware.requireRole(['Customer', 'Staff', 'Admin']), 

@@ -49,7 +49,6 @@ const staffloginController= {
                 $set: { lastLoginAttempt: new Date() }
             });
 
-            //check if locked
             var projection = 'items orderType status orderID timestamp payment';
             var result = await db.findMany(Order, {}, projection);
 
@@ -69,22 +68,34 @@ const staffloginController= {
                             timestamp: Date.now(),
                             logType: 'Success',
                             functionType: 'postStaffLogin',
-                            description: 'Successful Login | Reset locked and failedAttempts'
+                            description: 'Lock Expired | Reset locked and failedAttempts'
                         };
                         
                         var logged = await db.insertOne(Log, logEntry);
                     }
                     //sort password
                     var passwordArr = response.password;
-                    passwordArr.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-
+                    if (passwordArr > 1) {
+                        passwordArr.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    }
                     console.log(passwordArr);
 
                     bcrypt.compare(password, passwordArr[0].password, async function(err, equal) {
                         if(equal) {
                             // Store user information in the session
-                            if(response.failedAttempts > 0 && response.lockedUntil == null) {
-                                var failed = await db.updateOne(User, {username: username}, {$set: {failedAttempts: 0}});
+                            if(response.failedAttempts > 0) {
+                                var unlock = await db.updateOne(User, {username: username}, {$set: {lockedUntil: null}});
+                                var unfail = await db.updateOne(User, { username: username}, {$set: {failedAttempts: 0}});
+
+                                var logEntry = {
+                                    username: username,
+                                    timestamp: Date.now(),
+                                    logType: 'Success',
+                                    functionType: 'postStaffLogin',
+                                    description: 'Successful Login | Reset locked and failedAttempts'
+                                };
+                        
+                                var logged = await db.insertOne(Log, logEntry);
                             }
 
                             // Prepare last login information for display (requirement 2.1.12)
