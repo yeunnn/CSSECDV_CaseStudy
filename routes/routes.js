@@ -20,6 +20,10 @@ const registrationController = require('../controllers/registrationController.js
 const passwordResetController = require('../controllers/passwordResetController.js');
 const dashboardController = require('../controllers/adminDashboardController.js');
 
+// import middleware
+const authzMiddleware = require('../middleware/authz.js');
+const reauthMiddleware = require('../middleware/reauth.js');
+
 const app = express();
 
 // Parse JSON bodies
@@ -32,18 +36,18 @@ app.use(express.json());
     when a client sends an HTTP GET request for `/`
 */
 app.get('/', controller.getIndex);
-app.get('/index', controller.userIndex);
+app.get('/index', authzMiddleware.requireRole(['Customer']), controller.userIndex);
 
 app.get('/logout', logoutController.getLogOut);
 
-//Menu Controller
-app.get('/menu', menuController.getMenu);
+//Menu Controller - with authorization
+app.get('/menu', authzMiddleware.requireRole(['Customer']), menuController.getMenu);
 app.get('/menu-public', menupublicController.getMenuPublic);
-app.post('/submit-order', menuController.submitOrder);
+app.post('/submit-order', authzMiddleware.requireRole(['Customer']), authzMiddleware.requireAction('place_orders'), menuController.submitOrder);
 
-app.get('/order-receipt', orderreceiptController.getOrderReceipt);
+app.get('/order-receipt', authzMiddleware.requireRole(['Customer']), orderreceiptController.getOrderReceipt);
 
-app.get('/order-status', orderstatusController.getOrderStatus);
+app.get('/order-status', authzMiddleware.requireRole(['Customer', 'Staff', 'Admin']), orderstatusController.getOrderStatus);
 
 app.get('/staff-login', staffloginController.getStaffLogin);
 app.post('/staff-login', staffloginController.postStaffLogin);
@@ -53,13 +57,12 @@ app.get('/customer-registration', registrationController.getCustomerRegistration
 app.post('/customer-registration', registrationController.postCustomerRegistration)
 app.post('/validate-password', registrationController.postPasswordValidation)
 
-//password reset
+//password reset - critical operations require re-authentication
 app.get('/password-reset-1', passwordResetController.getPasswordResetStep1)
 app.post('/password-reset-2', passwordResetController.postPasswordResetStep2)
 app.post('/password-reset-3', passwordResetController.postPasswordResetStep3)
 app.post('/password-reset-final', passwordResetController.postPasswordResetFinal)
 
-//admin page
 app.get('/admin-dashboard', dashboardController.getAdminDashbaord);
 app.get('/get-accounts', dashboardController.getAccounts);
 app.get('/get-logs', dashboardController.getLogs);
@@ -73,6 +76,39 @@ app.get('/staff-page', staffpageController.getStaffPage);
 app.post('/update-order-status/:orderId', staffpageController.updateOrderStatus);
 // Delete order
 app.delete('/delete-order/:orderId', staffpageController.deleteOrder);
+// Change password routes for logged-in users (requires re-authentication)
+app.get('/change-password', 
+    authzMiddleware.requireRole(['Customer', 'Staff', 'Admin']), 
+    (req, res) => {
+        // Always require re-authentication for change password
+        // Store the original URL to redirect back after re-authentication
+        req.session.originalUrl = '/change-password';
+        res.redirect('/reauth-required');
+    }
+);
+
+// Staff page - with authorization
+app.get('/staff-page', authzMiddleware.requireRole(['Staff', 'Admin']), staffpageController.getStaffPage);
+
+// Update order status - with authorization and business rules
+app.post('/update-order-status/:orderId', 
+    authzMiddleware.requireRole(['Staff', 'Admin']), 
+    authzMiddleware.requireAction('update_orders'),
+    authzMiddleware.enforceOrderBusinessRules,
+    staffpageController.updateOrderStatus
+);
+
+// Delete order - with authorization and business rules
+app.delete('/delete-order/:orderId', 
+    authzMiddleware.requireRole(['Staff', 'Admin']), 
+    authzMiddleware.requireAction('delete_orders'),
+    authzMiddleware.enforceOrderBusinessRules,
+    staffpageController.deleteOrder
+);
+
+// Re-authentication routes
+app.get('/reauth-required', reauthMiddleware.showReauthForm);
+app.post('/reauth-required', reauthMiddleware.processReauth);
 
 /*
     exports the object `app` (defined above)

@@ -11,7 +11,7 @@ db.connect();
 add();
 async function add(){
     var user1 = 'Admin';
-    var pw1 = 'ossuAdmin15';
+    var pw1 = 'ossuAdmin1511';
     var pos1 = 'Admin';
 
     bcrypt.hash(pw1, saltRounds, function(err, hash) {
@@ -21,7 +21,7 @@ async function add(){
         }
         var UserSchema = {
             username: user1,
-            password: passwordSchema,
+            password: [{ password: hash }],
             position: pos1
         }
 
@@ -34,7 +34,7 @@ async function add(){
     });
 
     var user2 = 'Staff';
-    var pw2 = 'ossuStaff20';
+    var pw2 = 'ossuStaff2011';
     var pos2 = 'Staff';
 
     bcrypt.hash(pw2, saltRounds, function(err, hash) {
@@ -44,7 +44,7 @@ async function add(){
         }
         var UserSchema = {
             username: user2,
-            password: hash,
+            password: [{ password: hash }],
             position: pos2
         }
 
@@ -68,7 +68,7 @@ async function add(){
         }
         var UserSchema = {
             username: user3,
-            password: hash,
+            password: [{ password: hash }],
             position: pos3
         }
 
@@ -91,7 +91,7 @@ async function add(){
         }
         var UserSchema = {
             username: user4,
-            password: hash,
+            password: [{ password: hash }],
             position: pos4
         }
 
@@ -114,7 +114,7 @@ async function add(){
         }
         var UserSchema = {
             username: user5,
-            password: hash,
+            password: [{ password: hash }],
             position: pos5
         }
 

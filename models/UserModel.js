@@ -45,6 +45,14 @@ var UserSchema = new mongoose.Schema({
         default: null
     },
     deletedAt: {
+      type: Date,
+    },
+    // New fields for last login tracking (requirement 2.1.12)
+    lastSuccessfulLogin: {
+        type: Date,
+        default: null
+    },
+    lastLoginAttempt: {
         type: Date,
         default: null
     }

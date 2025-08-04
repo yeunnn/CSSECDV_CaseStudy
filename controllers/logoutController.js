@@ -1,3 +1,6 @@
+// import re-authentication middleware
+const reauthMiddleware = require('../middleware/reauth.js');
+
 /*
     defines an object which contains functions executed as callback
     when a client requests for `logout` paths in the server
@@ -14,6 +17,10 @@ const logoutController = {
             logs-out the current user
             destroys the current values stored in `req.session`
         */
+        
+        // Clear re-authentication data before destroying session
+        reauthMiddleware.clearRecentAuth(req);
+        
         req.session.destroy(function(err) {
             if(err) throw err;
 

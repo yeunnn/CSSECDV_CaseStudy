@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Re-authentication Required</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <style>
+        .reauth-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .reauth-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .security-notice {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .btn-reauth {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-reauth:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        .user-info {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="reauth-container">
+        <div class="reauth-header">
+            <h2>🔐 Re-authentication Required</h2>
+        </div>
+
+        <div class="security-notice">
+            <strong>Security Notice:</strong> You are about to perform a critical operation that requires password confirmation for your security.
+        </div>
+
+        <div class="user-info">
+            <p>Logged in as: <strong>{{username}}</strong></p>
+            <p>Role: <strong>{{position}}</strong></p>
+        </div>
+
+        {{#if errorMessage}}
+        <div class="error-message">
+            {{errorMessage}}
+        </div>
+        {{/if}}
+
+        <form action="/reauth-required" method="POST">
+            <div class="form-group">
+                <label for="password">Enter your password to continue:</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
+            </div>
+
+            <input type="hidden" name="originalUrl" value="{{originalUrl}}">
+            
+            <button type="submit" class="btn-reauth">Verify Identity</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/logout" style="color: #666; text-decoration: none; font-size: 14px;">Cancel and Logout</a>
+        </div>
+    </div>
+
+    <script>
+        // Auto-focus on password field
+        document.getElementById('password').focus();
+        
+        // Clear password field on page load for security
+        window.onload = function() {
+            document.getElementById('password').value = '';
+        };
+    </script>
+</body>
+</html>

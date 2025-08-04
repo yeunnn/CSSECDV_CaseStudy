@@ -14,6 +14,16 @@ const bcrypt = require('bcrypt');
 const staffloginController= {
 
     getStaffLogin: function (req, res) {
+        // Check if user is already logged in
+        if (req.session && req.session.user) {
+            // Redirect based on user role
+            if (req.session.position === 'Customer') {
+                return res.redirect('/index');
+            } else if (req.session.position === 'Staff' || req.session.position === 'Admin') {
+                return res.redirect('/staff-page');
+            }
+        }
+        
         res.render('staff-login');
     },
 
@@ -32,7 +42,12 @@ const staffloginController= {
             var user = {
                 username: username
             };
-            var response = await db.findOne(User, user, 'username password position resetQuestions failedAttempts lockedUntil');
+            var response = await db.findOne(User,user,'username password position resetQuestions failedAttempts lockedUntil lastSuccessfulLogin lastLoginAttempt');
+
+            // Update last login attempt timestamp
+            await db.updateOne(User, {username: username}, {
+                $set: { lastLoginAttempt: new Date() }
+            });
 
             var projection = 'items orderType status orderID timestamp payment';
             var result = await db.findMany(Order, {}, projection);
@@ -82,6 +97,23 @@ const staffloginController= {
                         
                                 var logged = await db.insertOne(Log, logEntry);
                             }
+
+                            // Prepare last login information for display (requirement 2.1.12)
+                            var lastLoginInfo = null;
+                            if (response.lastSuccessfulLogin) {
+                                lastLoginInfo = {
+                                    date: response.lastSuccessfulLogin.toLocaleString()
+                                };
+                            }
+
+                            // Update login tracking information
+                            await db.updateOne(User, {username: username}, {
+                                $set: { 
+                                    lastSuccessfulLogin: new Date(),
+                                    failedAttempts: 0
+                                }
+                            });
+
                             req.session.user = response.username;
                             req.session.position = response.position;
 
@@ -96,13 +128,24 @@ const staffloginController= {
                             var logged = await db.insertOne(Log, logEntry);
 
                             if(response.position == 'Customer') {
-                                res.render('index', {active:'index', position:response.position});
+                                res.render('index', {
+                                    active:'index', 
+                                    position:response.position,
+                                    lastLoginInfo: lastLoginInfo,
+                                    showLoginNotification: lastLoginInfo !== null
+                                });
                             }
                             else{
                                 // Assuming `results` is an array of orders
                                 result.sort((a, b) => b.orderID - a.orderID);
 
-                                res.render('staff-page', {result, active:'staff-page', position:response.position});
+                                res.render('staff-page', {
+                                    result, 
+                                    active:'staff-page', 
+                                    position:response.position,
+                                    lastLoginInfo: lastLoginInfo,
+                                    showLoginNotification: lastLoginInfo !== null
+                                });
                             }
                         }
                         else {

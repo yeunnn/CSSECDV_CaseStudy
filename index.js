@@ -19,6 +19,9 @@ const routes = require('./routes/routes.js');
 // import module `database` from `./model/db.js`
 const db = require('./models/db.js');
 
+// import authentication middleware
+const authMiddleware = require('./middleware/auth.js');
+
 const app = express();
 const port = 3000;
 
@@ -53,9 +56,14 @@ db.connect();
 // use `express-session`` middleware and set its options
 // use `MongoStore` as server-side session storage
 app.use(session({
-  'secret': 'restaurant-session',
+  'secret': process.env.SESSION_SECRET || 'restaurant-session-secure-key-2024',
   'resave': false,
   'saveUninitialized': false,
+  'cookie': {
+    'secure': false, // Set to true in production with HTTPS
+    'httpOnly': true,
+    'maxAge': 24 * 60 * 60 * 1000 // 24 hours
+  },
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 
@@ -65,6 +73,9 @@ app.use(express.urlencoded({extended: true}));
 // set the folder `public` as folder containing static assets
 // such as css, js, and image files
 app.use(express.static('public'));
+
+// Apply authentication middleware to all routes
+app.use(authMiddleware.requireAuth);
 
 // define the paths contained in `./routes/routes.js`
 app.use('/', routes);
