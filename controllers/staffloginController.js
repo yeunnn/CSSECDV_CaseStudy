@@ -72,6 +72,7 @@ const staffloginController= {
                         description: `${username} now has security questions.`
                     };
                     console.log(response);
+                    console.log("hello");
                     var logged = await db.insertOne(Log, logEntry);
                     res.render('staff-login', {errorMessage: 'Required to Login again.'});
                 }
@@ -94,7 +95,7 @@ const staffloginController= {
             var user = {
                 username: username
             };
-            var response = await db.findOne(User,user,'username password position security failedAttempts lockedUntil lastSuccessfulLogin lastLoginAttempt');
+            var response = await db.findOne(User,user,'username password position security failedAttempts lockedUntil lastSuccessfulLogin lastLoginAttempt deletedAt');
 
             // Update last login attempt timestamp
             await db.updateOne(User, {username: username}, {
@@ -104,7 +105,14 @@ const staffloginController= {
             var projection = 'items orderType status orderID timestamp payment';
             var result = await db.findMany(Order, {}, projection);
 
+            // Check if account exists and is not soft deleted
             if (response != null && (response.position == 'Admin' || response.position == 'Staff' || response.position == 'Customer')){
+                // Check if account is soft deleted
+                if (response.deletedAt != null) {
+                    // Account is soft deleted, prevent login
+                    return res.render('staff-login', { errorMessage: 'Invalid username or password.'});
+                }
+                
                 //lock check
                 //console.log(response);
                 if(response.lockedUntil != null && response.lockedUntil >= Date.now()) {
@@ -127,10 +135,11 @@ const staffloginController= {
                     }
                     //sort password
                     var passwordArr = response.password;
-                    if (passwordArr > 1) {
-                        passwordArr.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-                    }
-                    console.log(passwordArr);
+                    passwordArr.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    //if (passwordArr > 1) {
+                        //passwordArr.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    //}
+                    console.log(passwordArr[0].password);
 
                     bcrypt.compare(password, passwordArr[0].password, async function(err, equal) {
                         if(equal) {

@@ -1,146 +1,360 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>OSSU | Customer Registration</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="stylesheet" href="/css/modern-auth.css">
+</head>
+<body>
+	<div class="auth-background">
+		<div class="auth-container">
+			<div class="auth-header">
+				<h1>Register</h1>
+			</div>
 
-	<head>
-	<meta charset="utf-8">
+			{{#if error}}
+				<div class="error-box">
+					{{error}}
+				</div>
+			{{/if}}
 
-	<title>OSSU | Customer </title>
+			<form class="auth-form" method="POST" action="/customer-registration" novalidate>
+				<div class="input-group">
+					<label for="username">Username</label>
+					<div class="input-field with-icon">
+						<i class="input-icon fas fa-user"></i>
+						<input type="text" 
+						       id="username"
+						       name="username" 
+						       placeholder="Choose a username"
+						       required 
+						       maxlength="30"
+						       minlength="3"
+						       pattern="[a-zA-Z0-9_-]+"
+						       title="Username must be 3-30 characters long and contain only letters, numbers, underscores, and hyphens"
+						       value="{{formData.username}}">
+					</div>
+					{{#if fieldErrors.username}}
+						<div class="field-error">{{fieldErrors.username}}</div>
+					{{/if}}
+					<div class="char-counter" id="username-counter">0/30</div>
+				</div>
 
-	<link rel="stylesheet" href="/css/login_signup.css">
-	<link rel="icon" type="image/x-icon" href="/images/ossu-logo.png">
-	
-	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
-
-	</head>
-
-	<body>
-		<div class="bg-img">
-			<div class="content" style="overflow: hidden">
-				<header>Customer Registration</header>
-				<!-- Add this where you want the error message to appear -->
-				{{#if errorMessage}}
-					<div class="error-box">
-						{{errorMessage}}
+				<div class="input-group">
+					<label for="password">Password</label>
+					<div class="input-field with-icon password-field">
+						<i class="input-icon fas fa-lock"></i>
+						<input type="password" 
+						       id="password"
+						       name="password" 
+						       class="password-input"
+						       placeholder="Create a strong password"
+						       required 
+						       maxlength="30"
+						       minlength="15"
+						       title="Password must be 15-30 characters long with at least 1 lowercase, 1 uppercase, and 1 numeric character">
+						<button type="button" class="password-toggle" id="togglePassword">
+							<i class="fas fa-eye"></i> SHOW
+						</button>
 					</div>
-				{{/if}}
-				<form action="/customer-registration" method="post">
-					<div class="field">
-						<span class="fa fa-user"></span>
-						<input type="text" required placeholder="Username" name="username" required>
-					</div>
-					<div class="field space">
-						<span class="fa fa-lock"></span>
-						<input type="password" class="pass-key" required placeholder="Password" name="password" required>
-						<span class="show">SHOW</span>
-					</div>
-                    <div class="space return-home">
-						<div>
-							<h1 class="text-white"> Requirements: </h1>
-							<div class="text-white"> <span id="validatePL">❌</span> Minimum of 15 Character Length </div> 
-							<div class="text-white"> <span id="validateLC">❌</span>Atleast 1 lowercase character </div> 
-							<div class="text-white"> <span id="validateUC">❌</span> Atleast 1 uppercase character </div> 
-							<div class="text-white"> <span id="validateNC">❌</span> Atleast 1 numeric character</div> 
-						</div>
-					</div>
-					<br>
-					<div>
-						<label for="role" class="return-home">Select your first security question:</label>
-						<br>
-						<select name="secQ1" id="secQ1">
-  							<option value="What was the name of your first pet?">What was the name of your first pet?</option>
-  							<option value="What was the first video game you played?">What was the first video game you played?</option>
-  							<option value="What is your favorite food?">What is your favorite food?</option>
-							<option value="What is your favorite book?">What is your favorite book?</option>
-						</select>
-						<div class="field">
-							<span class="fa fa-user"></span>
-							<input type="text" required placeholder="Answer..." name="secQ1Ans" required>
-						</div>
-						<br>
-						<label for="role" class="return-home">Select your second security question:</label>
-						<br>
-						<select name="secQ2" id="secQ2">
-  							<option value="What was your dream job as a child?">What was your dream job as a child?</option>
-  							<option value="What was your favorite subject in high school?">What was your favorite subject in high school?</option>
-  							<option value="What was your least favorite food as a child?">What was your least favorite food as a child?</option>
-							<option value="What was the first social event you went to?">What was the first social event you went to?</option>
-						</select>
-						<div class="field">
-							<span class="fa fa-user"></span>
-							<input type="text" required placeholder="Answer..." name="secQ2Ans" required>
-						</div>
-						<br>
-					</div>
+					{{#if fieldErrors.password}}
+						<div class="field-error">{{fieldErrors.password}}</div>
+					{{/if}}
+					<div class="char-counter" id="password-counter">0/30</div>
 					
-					<div class="field">
-						<input type="submit" value="Register" name="submit">
+					<!-- Password Requirements Display -->
+					<div class="password-requirements" id="password-requirements">
+						<h3>Password Requirements</h3>
+						<div class="requirement-item">
+							<span class="requirement-icon invalid" id="length-check">✗</span>
+							<span>At least 15 characters long</span>
+						</div>
+						<div class="requirement-item">
+							<span class="requirement-icon invalid" id="lowercase-check">✗</span>
+							<span>At least 1 lowercase letter</span>
+						</div>
+						<div class="requirement-item">
+							<span class="requirement-icon invalid" id="uppercase-check">✗</span>
+							<span>At least 1 uppercase letter</span>
+						</div>
+						<div class="requirement-item">
+							<span class="requirement-icon invalid" id="number-check">✗</span>
+							<span>At least 1 number</span>
+						</div>
 					</div>
-				</form>
-				<br>
-				<a href="/" class="return-home">Back to Home</a>
-				<br>
-				<a href="/staff-login" class="return-home">Already have an account?</a>
+				</div>
+
+				<div class="input-group">
+					<label for="confirmPassword">Confirm Password</label>
+					<div class="input-field with-icon password-field">
+						<i class="input-icon fas fa-lock"></i>
+						<input type="password" 
+						       id="confirmPassword"
+						       name="confirmPassword" 
+						       class="password-input"
+						       placeholder="Confirm your password"
+						       required 
+						       maxlength="30"
+						       minlength="15">
+						<button type="button" class="password-toggle" id="toggleConfirmPassword">
+							<i class="fas fa-eye"></i> SHOW
+						</button>
+					</div>
+					{{#if fieldErrors.confirmPassword}}
+						<div class="field-error">{{fieldErrors.confirmPassword}}</div>
+					{{/if}}
+					<div id="password-match-message"></div>
+				</div>
+
+				<!-- Security Questions Section -->
+				<div class="security-section">
+					<h3>Security Questions</h3>
+					<p style="text-align: center; color: #718096; font-size: 14px; margin-bottom: 20px;">
+						Choose 2 security questions to help recover your account
+					</p>
+
+					<div class="security-question">
+						<label for="secQ1">Security Question 1</label>
+						<select id="secQ1" name="secQ1" required>
+							<option value="">Select a question...</option>
+							<option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+							<option value="What was the name of your first pet?">What was the name of your first pet?</option>
+							<option value="What city were you born in?">What city were you born in?</option>
+							<option value="What is your favorite book?">What is your favorite book?</option>
+							<option value="What was your childhood nickname?">What was your childhood nickname?</option>
+						</select>
+						<div class="input-field" style="margin-top: 8px;">
+							<input type="text" 
+							       id="secQ1Ans"
+							       name="secQ1Ans" 
+							       placeholder="Your answer"
+							       required 
+							       maxlength="30"
+							       minlength="2"
+							       pattern="[a-zA-Z0-9\s.,'-]+"
+							       title="Security answer must be 2-30 characters long and contain only letters, numbers, spaces, and basic punctuation"
+							       value="{{formData.secQ1Ans}}">
+						</div>
+						{{#if fieldErrors.secQ1Ans}}
+							<div class="field-error">{{fieldErrors.secQ1Ans}}</div>
+						{{/if}}
+						<div class="char-counter" id="secQ1Ans-counter">0/30</div>
+					</div>
+
+					<div class="security-question">
+						<label for="secQ2">Security Question 2</label>
+						<select id="secQ2" name="secQ2" required>
+							<option value="">Select a question...</option>
+							<option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+							<option value="What was the name of your first pet?">What was the name of your first pet?</option>
+							<option value="What city were you born in?">What city were you born in?</option>
+							<option value="What is your favorite book?">What is your favorite book?</option>
+							<option value="What was your childhood nickname?">What was your childhood nickname?</option>
+						</select>
+						<div class="input-field" style="margin-top: 8px;">
+							<input type="text" 
+							       id="secQ2Ans"
+							       name="secQ2Ans" 
+							       placeholder="Your answer"
+							       required 
+							       maxlength="30"
+							       minlength="2"
+							       pattern="[a-zA-Z0-9\s.,'-]+"
+							       title="Security answer must be 2-30 characters long and contain only letters, numbers, spaces, and basic punctuation"
+							       value="{{formData.secQ2Ans}}">
+						</div>
+						{{#if fieldErrors.secQ2Ans}}
+							<div class="field-error">{{fieldErrors.secQ2Ans}}</div>
+						{{/if}}
+						<div class="char-counter" id="secQ2Ans-counter">0/30</div>
+					</div>
+
+				</div>
+
+				<button type="submit" class="submit-button">
+					<i class="fas fa-user-plus"></i> Create Account
+				</button>
+			</form>
+
+			<div class="auth-links">
+				<a href="/staff-login" class="auth-link">
+					<i class="fas fa-sign-in-alt"></i> Already have an account? Login
+				</a>
+				<a href="/" class="auth-link secondary">
+					<i class="fas fa-home"></i> Back to Home
+				</a>
 			</div>
 		</div>
+	</div>
 
+	<script src="/js/validation.js"></script>
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
-			const passwordInput = document.querySelector(".pass-key");
-			const showButton = document.querySelector(".show");
-			
-			showButton.addEventListener("click", function () {
-			if (passwordInput.type === "password") {
-				passwordInput.type = "text";
-			} else {
-				passwordInput.type = "password";
+			// Initialize validation for customer registration
+			if (typeof initializeValidation === 'function') {
+				initializeValidation();
 			}
+
+			// Password toggle functionality
+			const togglePassword = document.getElementById('togglePassword');
+			const passwordInput = document.getElementById('password');
+			const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+			const confirmPasswordInput = document.getElementById('confirmPassword');
+
+			function setupPasswordToggle(toggleBtn, passwordField) {
+				if (toggleBtn && passwordField) {
+					toggleBtn.addEventListener('click', function() {
+						const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+						passwordField.setAttribute('type', type);
+						
+						if (type === 'text') {
+							this.innerHTML = '<i class="fas fa-eye-slash"></i> HIDE';
+						} else {
+							this.innerHTML = '<i class="fas fa-eye"></i> SHOW';
+						}
+					});
+				}
+			}
+
+			setupPasswordToggle(togglePassword, passwordInput);
+			setupPasswordToggle(toggleConfirmPassword, confirmPasswordInput);
+
+			// Password requirements validation
+			if (passwordInput) {
+				passwordInput.addEventListener('input', function() {
+					const password = this.value;
+					
+					// Length check
+					const lengthCheck = document.getElementById('length-check');
+					if (password.length >= 15) {
+						lengthCheck.textContent = '✓';
+						lengthCheck.className = 'requirement-icon valid';
+					} else {
+						lengthCheck.textContent = '✗';
+						lengthCheck.className = 'requirement-icon invalid';
+					}
+					
+					// Lowercase check
+					const lowercaseCheck = document.getElementById('lowercase-check');
+					if (/[a-z]/.test(password)) {
+						lowercaseCheck.textContent = '✓';
+						lowercaseCheck.className = 'requirement-icon valid';
+					} else {
+						lowercaseCheck.textContent = '✗';
+						lowercaseCheck.className = 'requirement-icon invalid';
+					}
+					
+					// Uppercase check
+					const uppercaseCheck = document.getElementById('uppercase-check');
+					if (/[A-Z]/.test(password)) {
+						uppercaseCheck.textContent = '✓';
+						uppercaseCheck.className = 'requirement-icon valid';
+					} else {
+						uppercaseCheck.textContent = '✗';
+						uppercaseCheck.className = 'requirement-icon invalid';
+					}
+					
+					// Number check
+					const numberCheck = document.getElementById('number-check');
+					if (/[0-9]/.test(password)) {
+						numberCheck.textContent = '✓';
+						numberCheck.className = 'requirement-icon valid';
+					} else {
+						numberCheck.textContent = '✗';
+						numberCheck.className = 'requirement-icon invalid';
+					}
+				});
+			}
+
+			// Password confirmation matching
+			function checkPasswordMatch() {
+				const password = passwordInput.value;
+				const confirmPassword = confirmPasswordInput.value;
+				const matchMessage = document.getElementById('password-match-message');
+				
+				if (confirmPassword.length > 0) {
+					if (password === confirmPassword) {
+						matchMessage.innerHTML = '<div class="field-success">Passwords match!</div>';
+					} else {
+						matchMessage.innerHTML = '<div class="field-error">Passwords do not match</div>';
+					}
+				} else {
+					matchMessage.innerHTML = '';
+				}
+			}
+
+			if (passwordInput && confirmPasswordInput) {
+				passwordInput.addEventListener('input', checkPasswordMatch);
+				confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+			}
+
+			// Character counters for all inputs
+			const inputs = [
+				{ input: 'username', counter: 'username-counter' },
+				{ input: 'password', counter: 'password-counter' },
+				{ input: 'secQ1Ans', counter: 'secQ1Ans-counter' },
+				{ input: 'secQ2Ans', counter: 'secQ2Ans-counter' }
+			];
+
+			inputs.forEach(item => {
+				const inputElement = document.getElementById(item.input);
+				const counterElement = document.getElementById(item.counter);
+				
+				if (inputElement && counterElement) {
+					inputElement.addEventListener('input', function() {
+						const length = this.value.length;
+						const maxLength = this.getAttribute('maxlength');
+						counterElement.textContent = `${length}/${maxLength}`;
+						
+						if (length > maxLength * 0.8) {
+							counterElement.className = 'char-counter warning';
+						} else if (length > maxLength * 0.9) {
+							counterElement.className = 'char-counter danger';
+						} else {
+							counterElement.className = 'char-counter';
+						}
+					});
+				}
 			});
 
-			//const passwordChecker = document.getElementById('password');
-			const minLength = document.getElementById('validatePL')
-			const minLowercase = document.getElementById('validateLC')
-			const minUppercase = document.getElementById('validateUC')
-			const minNumeric = document.getElementById('validateNC')
-		
-			console.log(minLength.textContent);
-			let timeoutId;
+			// Prevent duplicate security questions
+			const questionSelects = [
+				document.getElementById('secQ1'),
+				document.getElementById('secQ2')
+			];
 
-			passwordInput.addEventListener('input', () => {
-				clearTimeout(timeoutId);
-				timeoutId = setTimeout(() => {
-					const password = passwordInput.value;
-
-					//AJAX✅ 
-					fetch('/validate-password', {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json'},
-						body: JSON.stringify({ password })
-					})
-					.then(res => res.json())
-					.then(data => {
-						console.log(data.validated);
-						const response = data.validated;
-						///PL, LC, UC, NC
-						if(response[0] == true) {minLength.textContent = "✅";}
-						else {minLength.textContent = "❌";}
-
-						if(response[1] == true) {minLowercase.textContent = "✅";}
-						else {minLowercase.textContent = "❌";}
-
-						if(response[2] == true) {minUppercase.textContent = "✅";}
-						else {minUppercase.textContent = "❌";}
-
-						if(response[3] == true) {minNumeric.textContent = "✅";}
-						else {minNumeric.textContent = "❌";}
-					})
-				}, 300)
-			})
+			questionSelects.forEach((select, index) => {
+				if (select) {
+					select.addEventListener('change', function() {
+						const selectedValue = this.value;
+						
+						// Reset other selects' disabled options
+						questionSelects.forEach((otherSelect, otherIndex) => {
+							if (otherSelect && otherIndex !== index) {
+								Array.from(otherSelect.options).forEach(option => {
+									option.disabled = false;
+								});
+							}
+						});
+						
+						// Disable selected option in other selects
+						if (selectedValue) {
+							questionSelects.forEach((otherSelect, otherIndex) => {
+								if (otherSelect && otherIndex !== index) {
+									Array.from(otherSelect.options).forEach(option => {
+										if (option.value === selectedValue) {
+											option.disabled = true;
+										}
+									});
+								}
+							});
+						}
+					});
+				}
+			});
 		});
-
-		
-
-
 	</script>
-
-	</body>
+</body>
 </html>

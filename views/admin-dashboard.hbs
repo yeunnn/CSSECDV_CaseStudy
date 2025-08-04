@@ -1,113 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  	<head>
-	
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+    <meta name="description" content="Admin Dashboard for OSSU Restaurant System">
     <meta name="author" content="">
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/images/ossu-logo.png">
 
-    <title>OSSU | Menu</title>
+    <title>OSSU | Admin Dashboard</title>
 
     <!-- CSS Files -->
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-
-    <link rel="stylesheet" type="text/css" href="/css/font-awesome.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/styles.css">
-
     <link rel="stylesheet" href="/css/owl-carousel.css">
-
     <link rel="stylesheet" href="/css/lightbox.css">
-
     <link rel="stylesheet" href="/css/order-style.css">
-    
-    <style>
-        h1 {
-            color: #333;
-        }
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
+</head>
 
-        .menu-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            justify-items: center;
-        }
-
-        .toolbox {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-
-        .menu-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            width: 230px;
-        }
-
-        .menu-item img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .categories {
-            padding: 5px;
-        }
-
-        .cart-container {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 20px;
-            width: 600px;
-            margin-left: auto;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .cart-item img {
-            max-width: 50px;
-            max-height: 50px;
-            margin-right: 10px;
-        }
-
-        button {
-            margin: 5px;
-        }
-
-        .menu-item input {
-            width: 30px;
-            text-align: center;
-        }
-
-        .cart-container h2 {
-            border-bottom: 1px solid #000; /* You can adjust the color and style of the line */
-            padding-bottom: 5px; /* Adjust the padding as needed */
-        }
-
-        input[type='number']{
-            width: 40px;
-        }
-
-        .table-no-style {
-            float: right;
-        }
-    </style>
-
-    </head>
-
-    <body>
-    
+<body>
     <!-- ***** Header Area Start ***** -->
-        <header class="header-area header-sticky">
+    <header class="header-area header-sticky">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -133,87 +49,180 @@
         </div>
     </header>
     <!-- ***** Header Area End ***** -->
+
     <div id="top">
         <div class="container-fluid">
         </div>
     </div>
 
-    <!-- ***** Menu Starts Here ***** -->
-    <section class="section" id="header-fix-section">
-        <div class="container">
-            <div class="section-heading">
-                <h6>ADMIN DASHBOARD</h6>
-                <h2>Main Menu</h2>
+    <!-- ***** Admin Dashboard Starts Here ***** -->
+    <section class="section dashboard-section">
+        <div class="container dashboard-container">
+            <div class="dashboard-header">
+                <h1>Admin Dashboard</h1>
+                <p class="dashboard-subtitle">Manage system accounts and view activity logs</p>
             </div>
-            <div class="categories">
-                <button id="acctManager">Account Management</button>
-                <button id="logManager">Log Reader</button>
+
+            <!-- Dashboard Controls -->
+            <div class="dashboard-controls">
+                <button id="acctManager" class="dashboard-btn primary-btn">
+                    <i class="fa fa-users"></i>
+                    Account Management
+                </button>
+                <button id="logManager" class="dashboard-btn primary-btn">
+                    <i class="fa fa-file-text"></i>
+                    Log Reader
+                </button>
+                <button id="addAcct" class="dashboard-btn secondary-btn">
+                    <i class="fa fa-user-plus"></i>
+                    Create Account
+                </button>
             </div>
-            <br>
+
+            <!-- Error and Success Messages -->
             {{#if errorMessage}}
-                <div class="error-box">
-					{{errorMessage}}
-				</div>
+                <div class="dashboard-alert alert-danger">
+                    {{errorMessage}}
+                </div>
             {{/if}}
             {{#if success}}
-                <div style="color: green;">
-					{{success}}
-			    </div>
+                <div class="dashboard-alert alert-success">
+                    {{success}}
+                </div>
             {{/if}}
-            <dialog id="acctDialog">
-                <form method="post" id="updateForm">
-                <label>Username: <input type="text" name="modalUsername" id="modalUsername" value="" readonly/></label>
-                <br>
-                <select name="roles" id="roles">
-  					<option value="Staff">Staff</option>
-  					<option value="Admin">Admin</option>
-				</select>
-                <div class="toolbox">
-                    <button type="submit" formaction="/delete-account">Delete</button>
-                    <button type="submit" formaction="/update-roles">Update</button>
+
+            <!-- Account Management Dialog -->
+            <dialog id="acctDialog" class="dashboard-dialog">
+                <div class="dialog-header">
+                    <h2>Account Management</h2>
                 </div>
+                <form method="post" id="updateForm" class="dialog-form">
+                    <div class="form-group">
+                        <label for="modalUsername">Username:</label>
+                        <input type="text" name="modalUsername" id="modalUsername" value="" readonly class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="roles">Role:</label>
+                        <select name="roles" id="roles" class="form-control">
+                            <option value="Staff">Staff</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="dialog-buttons">
+                        <button type="submit" formaction="/delete-account" class="btn btn-danger">Delete Account</button>
+                        <button type="submit" formaction="/update-roles" class="btn btn-primary">Update Role</button>
+                        <button type="button" id="closeDialog" class="btn btn-secondary">Cancel</button>
+                    </div>
                 </form>
-                <button id="closeDialog">Close</button>
             </dialog>
-            <button id="addAcct"> Create Acc </button>
-            <dialog id="createDialog">
-                <form method="post" id="createAccForm">
-                <div class="field">
-						<span class="fa fa-user"></span>
-						<input type="text" required placeholder="Username" name="username" required>
-					</div>
-					<div class="field space">
-						<span class="fa fa-lock"></span>
-						<input type="password" class="pass-key" required placeholder="Password" name="password" required>
-						<span class="show">SHOW</span>
-					</div>
-                    <select name="roles" id="roles">
-  					    <option value="Staff">Staff</option>
-  					    <option value="Admin">Admin</option>
-				    </select>
-                    <div class="space">
-						<div>
-							<h6> Requirements: </h6>
-							<div> <span id="validatePL">❌</span> Minimum of 15 Character Length </div> 
-							<div> <span id="validateLC">❌</span>Atleast 1 lowercase character </div> 
-							<div> <span id="validateUC">❌</span> Atleast 1 uppercase character </div> 
-							<div> <span id="validateNC">❌</span> Atleast 1 numeric character</div> 
-						</div>
-					</div>
-					<br>
-                <div class="toolbox">
-                    <button type="submit" formaction="/create-account">Create</button>
+
+            <!-- Create Account Dialog -->
+            <dialog id="createDialog" class="dashboard-dialog">
+                <div class="dialog-header">
+                    <h2>Create New Account</h2>
                 </div>
+                <form method="post" id="createAccForm" class="dialog-form">
+                    <div class="form-group">
+                        <label for="createUsername">Username:</label>
+                        <input type="text" id="createUsername" name="username" placeholder="Enter username" class="form-control" required>
+                    </div>
+                    <div class="form-group password-field">
+                        <label for="createPassword">Password:</label>
+                        <div class="input-field">
+                            <input type="password" id="createPassword" name="password" placeholder="Enter password" class="form-control pass-key" required>
+                            <button type="button" class="show-password" id="toggleCreatePassword">
+                                <i class="fas fa-eye"></i> SHOW
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="createRoles">Role:</label>
+                        <select name="roles" id="createRoles" class="form-control">
+                            <option value="Staff">Staff</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Security Questions Section -->
+                    <div class="security-section">
+                        <h3>Security Questions</h3>
+                        <p style="text-align: center; color: #718096; font-size: 14px; margin-bottom: 20px;">
+                            Choose 2 security questions to help recover the account
+                        </p>
+
+                        <div class="security-question">
+                            <label for="secQ1">Security Question 1</label>
+                            <select id="secQ1" name="secQ1" required>
+                                <option value="">Select a question...</option>
+                                <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+                                <option value="What was the name of your first pet?">What was the name of your first pet?</option>
+                                <option value="What city were you born in?">What city were you born in?</option>
+                                <option value="What is your favorite book?">What is your favorite book?</option>
+                                <option value="What was your childhood nickname?">What was your childhood nickname?</option>
+                            </select>
+                            <div class="input-field" style="margin-top: 8px;">
+                                <input type="text" 
+                                       id="secQ1Ans"
+                                       name="secQ1Ans" 
+                                       placeholder="Your answer"
+                                       required 
+                                       maxlength="30"
+                                       minlength="2"
+                                       pattern="[a-zA-Z0-9\s.,'-]+"
+                                       title="Security answer must be 2-30 characters long and contain only letters, numbers, spaces, and basic punctuation">
+                            </div>
+                            <div class="char-counter" id="secQ1Ans-counter">0/30</div>
+                        </div>
+
+                        <div class="security-question">
+                            <label for="secQ2">Security Question 2</label>
+                            <select id="secQ2" name="secQ2" required>
+                                <option value="">Select a question...</option>
+                                <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+                                <option value="What was the name of your first pet?">What was the name of your first pet?</option>
+                                <option value="What city were you born in?">What city were you born in?</option>
+                                <option value="What is your favorite book?">What is your favorite book?</option>
+                                <option value="What was your childhood nickname?">What was your childhood nickname?</option>
+                            </select>
+                            <div class="input-field" style="margin-top: 8px;">
+                                <input type="text" 
+                                       id="secQ2Ans"
+                                       name="secQ2Ans" 
+                                       placeholder="Your answer"
+                                       required 
+                                       maxlength="30"
+                                       minlength="2"
+                                       pattern="[a-zA-Z0-9\s.,'-]+"
+                                       title="Security answer must be 2-30 characters long and contain only letters, numbers, spaces, and basic punctuation">
+                            </div>
+                            <div class="char-counter" id="secQ2Ans-counter">0/30</div>
+                        </div>
+                    </div>
+                    
+                    <div class="password-requirements">
+                        <h6>Password Requirements:</h6>
+                        <div class="requirement-item"> <span id="validatePL">❌</span> Minimum of 15 characters </div> 
+                        <div class="requirement-item"> <span id="validateLC">❌</span> At least 1 lowercase character </div> 
+                        <div class="requirement-item"> <span id="validateUC">❌</span> At least 1 uppercase character </div> 
+                        <div class="requirement-item"> <span id="validateNC">❌</span> At least 1 numeric character </div> 
+                    </div>
+                    
+                    <div class="dialog-buttons">
+                        <button type="submit" formaction="/create-account" class="btn btn-success">Create Account</button>
+                        <button type="button" id="closeDialog2" class="btn btn-secondary">Cancel</button>
+                    </div>
                 </form>
-                <button id="closeDialog2">Close</button>
             </dialog>
-            <div id="menu" class="menu-container"></div>
-            <br>
-            <div id="pagination"></div>
+
+            <!-- Main Content Area -->
+            <div id="menu" class="dashboard-content"></div>
+            
+            <!-- Pagination -->
+            <div id="pagination" class="dashboard-pagination"></div>
         </div>
     </section>
     
-    <!-- ***** Menu Ends Here ***** -->
+    <!-- ***** Admin Dashboard Ends Here ***** -->
 
     <!-- ***** Footer Start ***** -->
     <footer>
@@ -221,11 +230,11 @@
             <div class="row">
                 <div class="col-lg-4 col-xs-12">
                     <div class="right-text-content">
-                            <ul class="social-icons">
-                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                            </ul>
+                        <ul class="social-icons">
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        </ul>
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -235,9 +244,7 @@
                 </div>
                 <div class="col-lg-4 col-xs-12">
                     <div class="left-text-content">
-                        <p>© Copyright OSSU.
-                        
-                        <br>All Rights Reserved</p>
+                        <p>  Copyright OSSU.<br>All Rights Reserved</p>
                     </div>
                 </div>
             </div>
@@ -265,21 +272,195 @@
     
     <!-- Global Init -->
     <script>
+		document.addEventListener("DOMContentLoaded", function () {
+			// Initialize validation for customer registration
+			if (typeof initializeValidation === 'function') {
+				initializeValidation();
+			}
+
+			// Password toggle functionality
+			const togglePassword = document.getElementById('togglePassword');
+			const passwordInput = document.getElementById('password');
+			const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+			const confirmPasswordInput = document.getElementById('confirmPassword');
+
+			// Password toggle for create account dialog
+			const toggleCreatePassword = document.getElementById('toggleCreatePassword');
+			const createPasswordInput = document.getElementById('createPassword');
+
+			function setupPasswordToggle(toggleBtn, passwordField) {
+				if (toggleBtn && passwordField) {
+					toggleBtn.addEventListener('click', function() {
+						const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+						passwordField.setAttribute('type', type);
+						
+						// Update button text and icon
+						const icon = this.querySelector('i');
+						if (type === 'text') {
+							icon.className = 'fas fa-eye-slash';
+							this.innerHTML = '<i class="fas fa-eye-slash"></i> HIDE';
+						} else {
+							icon.className = 'fas fa-eye';
+							this.innerHTML = '<i class="fas fa-eye"></i> SHOW';
+						}
+					});
+				}
+			}
+
+			setupPasswordToggle(togglePassword, passwordInput);
+			setupPasswordToggle(toggleConfirmPassword, confirmPasswordInput);
+			setupPasswordToggle(toggleCreatePassword, createPasswordInput);
+
+			// Password requirements validation
+			if (createPasswordInput) {
+				createPasswordInput.addEventListener('input', function() {
+					const password = this.value;
+					
+					// Length check
+					const lengthCheck = document.getElementById('validatePL');
+					if (password.length >= 15) {
+						lengthCheck.textContent = '✔️';
+						lengthCheck.className = 'requirement-icon valid';
+					} else {
+						lengthCheck.textContent = '❌';
+						lengthCheck.className = 'requirement-icon invalid';
+					}
+					
+					// Lowercase check
+					const lowercaseCheck = document.getElementById('validateLC');
+					if (/[a-z]/.test(password)) {
+						lowercaseCheck.textContent = '✔️';
+						lowercaseCheck.className = 'requirement-icon valid';
+					} else {
+						lowercaseCheck.textContent = '❌';
+						lowercaseCheck.className = 'requirement-icon invalid';
+					}
+					
+					// Uppercase check
+					const uppercaseCheck = document.getElementById('validateUC');
+					if (/[A-Z]/.test(password)) {
+						uppercaseCheck.textContent = '✔️';
+						uppercaseCheck.className = 'requirement-icon valid';
+					} else {
+						uppercaseCheck.textContent = '❌';
+						uppercaseCheck.className = 'requirement-icon invalid';
+					}
+					
+					// Number check
+					const numberCheck = document.getElementById('validateNC');
+					if (/[0-9]/.test(password)) {
+						numberCheck.textContent = '✔️';
+						numberCheck.className = 'requirement-icon valid';
+					} else {
+						numberCheck.textContent = '❌';
+						numberCheck.className = 'requirement-icon invalid';
+					}
+				});
+			}
+
+			// Password confirmation matching
+			function checkPasswordMatch() {
+				const password = passwordInput.value;
+				const confirmPassword = confirmPasswordInput.value;
+				const matchMessage = document.getElementById('password-match-message');
+				
+				if (confirmPassword.length > 0) {
+					if (password === confirmPassword) {
+						matchMessage.innerHTML = '<div class="field-success">Passwords match!</div>';
+					} else {
+						matchMessage.innerHTML = '<div class="field-error">Passwords do not match</div>';
+					}
+				} else {
+					matchMessage.innerHTML = '';
+				}
+			}
+
+			if (passwordInput && confirmPasswordInput) {
+				passwordInput.addEventListener('input', checkPasswordMatch);
+				confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+			}
+
+            // Character counters for all inputs
+			const inputs = [
+				{ input: 'secQ1Ans', counter: 'secQ1Ans-counter' },
+				{ input: 'secQ2Ans', counter: 'secQ2Ans-counter' }
+			];
+
+			inputs.forEach(item => {
+				const inputElement = document.getElementById(item.input);
+				const counterElement = document.getElementById(item.counter);
+				
+				if (inputElement && counterElement) {
+					inputElement.addEventListener('input', function() {
+						const length = this.value.length;
+						const maxLength = this.getAttribute('maxlength');
+						counterElement.textContent = `${length}/${maxLength}`;
+						
+						if (length > maxLength * 0.8) {
+							counterElement.className = 'char-counter warning';
+						} else if (length > maxLength * 0.9) {
+							counterElement.className = 'char-counter danger';
+						} else {
+							counterElement.className = 'char-counter';
+						}
+					});
+				}
+			});
+			// Prevent duplicate security questions
+			const questionSelects = [
+				document.getElementById('secQ1'),
+				document.getElementById('secQ2')
+			];
+
+			questionSelects.forEach((select, index) => {
+				if (select) {
+					select.addEventListener('change', function() {
+						const selectedValue = this.value;
+						
+						// Reset other selects' disabled options
+						questionSelects.forEach((otherSelect, otherIndex) => {
+							if (otherSelect && otherIndex !== index) {
+								Array.from(otherSelect.options).forEach(option => {
+									option.disabled = false;
+								});
+							}
+						});
+						
+						// Disable selected option in other selects
+						if (selectedValue) {
+							questionSelects.forEach((otherSelect, otherIndex) => {
+								if (otherSelect && otherIndex !== index) {
+									Array.from(otherSelect.options).forEach(option => {
+										if (option.value === selectedValue) {
+											option.disabled = true;
+										}
+									});
+								}
+							});
+						}
+					});
+				}
+			});
+		});
+	</script>
+
+
+    <script>
         document.addEventListener("DOMContentLoaded", function () { 
-            //logic required here
+            // Get DOM elements
             const acctManager = document.getElementById('acctManager');
             const logManager = document.getElementById('logManager');
-
             const modifiableContainer = document.getElementById('menu');
             const acctModal = document.getElementById('acctDialog');
             const createModal = document.getElementById('createDialog');
             const modalUsername = document.getElementById('modalUsername');
             const closeBtn = document.getElementById('closeDialog');
             const closeBtn2 = document.getElementById('closeDialog2');
-            const form = document.getElementById('updateForm');
-
-            const itemsPerPage = 10;
             
+            const itemsPerPage = 10;
+            let currentPage = 1;
+            
+            // Close dialog event listeners
             closeBtn.addEventListener('click', () => {
                 acctModal.close();
             });
@@ -288,288 +469,323 @@
                 createModal.close();
             });
             
-            const addAcctModal = document.getElementById('createDialog');
+            // Open create account dialog
             const addAcct = document.getElementById('addAcct');
             addAcct.addEventListener('click', () => {
-                addAcctModal.show();
+                createModal.showModal();
             });
 
+            // Render pagination buttons
             function renderPages(query, data) {
                 const paginationContainer = document.getElementById('pagination');
                 paginationContainer.innerHTML = '';
 
                 const totalPages = Math.ceil(data.length / itemsPerPage);
+                
+                // Don't render pagination if there's only one page
+                if (totalPages <= 1) return;
 
-                for (let i = 1; i <= totalPages; i++) {
+                // Create previous button
+                if (currentPage > 1) {
+                    const prevButton = document.createElement('button');
+                    prevButton.textContent = 'Previous';
+                    prevButton.classList.add('pagination-btn');
+                    prevButton.addEventListener('click', () => {
+                        currentPage--;
+                        renderMenu(currentPage, query);
+                    });
+                    paginationContainer.appendChild(prevButton);
+                }
+
+                // Create page buttons with ellipsis
+                const maxVisiblePages = 5;
+                let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+                
+                // Adjust startPage if we're near the end
+                if (endPage - startPage + 1 < maxVisiblePages) {
+                    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+                }
+                
+                // First page button
+                if (startPage > 1) {
+                    const firstButton = document.createElement('button');
+                    firstButton.textContent = '1';
+                    firstButton.classList.add('pagination-btn');
+                    firstButton.addEventListener('click', () => {
+                        currentPage = 1;
+                        renderMenu(currentPage, query);
+                    });
+                    paginationContainer.appendChild(firstButton);
+                    
+                    // Ellipsis if there are skipped pages
+                    if (startPage > 2) {
+                        const ellipsis = document.createElement('span');
+                        ellipsis.textContent = '...';
+                        ellipsis.classList.add('pagination-ellipsis');
+                        paginationContainer.appendChild(ellipsis);
+                    }
+                }
+                
+                // Page number buttons
+                for (let i = startPage; i <= endPage; i++) {
                     const pageButton = document.createElement('button');
                     pageButton.textContent = i;
+                    pageButton.classList.add('pagination-btn');
+                    if (i === currentPage) {
+                        pageButton.classList.add('active');
+                    }
                     pageButton.addEventListener('click', () => {
                         currentPage = i;
                         renderMenu(currentPage, query);
                     });
                     paginationContainer.appendChild(pageButton);
                 }
-            };
+                
+                // Ellipsis and last page button
+                if (endPage < totalPages) {
+                    // Ellipsis if there are skipped pages
+                    if (endPage < totalPages - 1) {
+                        const ellipsis = document.createElement('span');
+                        ellipsis.textContent = '...';
+                        ellipsis.classList.add('pagination-ellipsis');
+                        paginationContainer.appendChild(ellipsis);
+                    }
+                    
+                    // Last page button
+                    const lastButton = document.createElement('button');
+                    lastButton.textContent = totalPages;
+                    lastButton.classList.add('pagination-btn');
+                    lastButton.addEventListener('click', () => {
+                        currentPage = totalPages;
+                        renderMenu(currentPage, query);
+                    });
+                    paginationContainer.appendChild(lastButton);
+                }
+                
+                // Create next button
+                if (currentPage < totalPages) {
+                    const nextButton = document.createElement('button');
+                    nextButton.textContent = 'Next';
+                    nextButton.classList.add('pagination-btn');
+                    nextButton.addEventListener('click', () => {
+                        currentPage++;
+                        renderMenu(currentPage, query);
+                    });
+                    paginationContainer.appendChild(nextButton);
+                }
+            }
 
+            // Render dashboard content based on selected view
             function renderMenu(pageNumber, query) {
+                currentPage = pageNumber;
                 if(query == 'accounts') {
                     modifiableContainer.innerHTML = '';
+                    modifiableContainer.className = 'dashboard-content accounts-view';
                     fetch('/get-accounts')
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data);
-                        //TO-DO: add error checker for null data
+                        // Calculate pagination
                         const startIndex = (pageNumber - 1) * itemsPerPage;
                         const endIndex = pageNumber * itemsPerPage;
                         
+                        // Render account cards
                         for(let i = startIndex; i < endIndex && i < data.length; i++) {
                             const item = data[i];
                             const account = document.createElement('div');
-                            account.classList.add('menu-item');
+                            account.classList.add('dashboard-card', 'account-card');
 
-                            const username = document.createElement('h2');
+                            const username = document.createElement('h3');
                             username.textContent = item.username;
+                            username.classList.add('card-title');
                             account.appendChild(username);
+
+                            const roleContainer = document.createElement('div');
+                            roleContainer.classList.add('card-details');
+                            
+                            const position = document.createElement('p');
+                            position.innerHTML = '<strong>Role:</strong> ' + item.position;
+                            roleContainer.appendChild(position);
 
                             if(item.deletedAt) {
                                 const deletedAt = document.createElement('p');
-                                deletedAt.textContent = item.deletedAt;
-                                account.appendChild(deletedAt);
+                                deletedAt.innerHTML = '<strong>Deleted:</strong> ' + new Date(item.deletedAt).toLocaleString();
+                                deletedAt.classList.add('deleted-info');
+                                roleContainer.appendChild(deletedAt);
                             }
 
-                            const position = document.createElement('p');
-                            position.textContent = item.position;
-                            account.appendChild(position);
+                            account.appendChild(roleContainer);
 
+                            // Open account management dialog on click
                             account.addEventListener('click', () => {
-                                //modify an existing form that's normally hidden
+                                // Prevent opening modal for deleted accounts
+                                if(item.deletedAt) {
+                                    // Could show a message or just ignore the click
+                                    return;
+                                }
                                 modalUsername.value = username.textContent;
-                                
-                                acctModal.show();
+                                acctModal.showModal();
                             });
 
                             modifiableContainer.append(account);
                         }
                         renderPages(query, data);
                     });
-                    //switching pages/first
                 } else if (query == 'logs') {
+                    modifiableContainer.innerHTML = '';
+                    modifiableContainer.className = 'dashboard-content logs-view';
+                    
+                    // Create table container
+                    const tableContainer = document.createElement('div');
+                    tableContainer.classList.add('log-table-container');
+                    
+                    // Create filter controls
+                    const filterControls = document.createElement('div');
+                    filterControls.classList.add('log-filters');
+                    
+                    const logTypeFilter = document.createElement('div');
+                    logTypeFilter.innerHTML = `
+                        <label for="logType">Filter by Type:</label>
+                        <select id="logType">
+                            <option value="all">All Logs</option>
+                            <option value="Success">Success</option>
+                            <option value="Failure">Failure</option>
+                        </select>
+                    `;
+                    
+                    const sortFilter = document.createElement('div');
+                    sortFilter.innerHTML = `
+                        <label for="logSort">Sort by:</label>
+                        <select id="logSort">
+                            <option value="newest">Most Recent</option>
+                            <option value="oldest">Oldest First</option>
+                        </select>
+                    `;
+                    
+                    filterControls.appendChild(logTypeFilter);
+                    filterControls.appendChild(sortFilter);
+                    tableContainer.appendChild(filterControls);
+                    
+                    // Create table element
+                    const table = document.createElement('table');
+                    table.classList.add('log-table');
+                    
+                    // Create table header
+                    const thead = document.createElement('thead');
+                    thead.innerHTML = `
+                        <tr>
+                            <th>Username</th>
+                            <th>Type</th>
+                            <th>Timestamp</th>
+                            <th>Function</th>
+                            <th>Description</th>
+                        </tr>
+                    `;
+                    table.appendChild(thead);
+                    
+                    // Create table body
+                    const tbody = document.createElement('tbody');
+                    tbody.id = 'logTableBody';
+                    table.appendChild(tbody);
+                    
+                    tableContainer.appendChild(table);
+                    modifiableContainer.appendChild(tableContainer);
+                    
                     fetch('/get-logs')
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data);
-                        //TO-DO: add error checker for null data
-                        const startIndex = (pageNumber - 1) * itemsPerPage;
-                        const endIndex = pageNumber * itemsPerPage;
-                        for(let i = startIndex; i < endIndex && i < data.length; i++) {
-                            const item = data[i];
-                            const log = document.createElement('div');
-                            log.classList.add('menu-item');
-
-                            const username = document.createElement('h2');
-                            username.textContent = item.username;
-                            log.appendChild(username);
-
-                            const logType = document.createElement('p');
-                            logType.textContent = item.logType;
-                            log.appendChild(logType);
-
-                            const timestamp = document.createElement('p');
-                            timestamp.textContent = item.timestamp;
-                            log.appendChild(timestamp);
-
-                            const functionType = document.createElement('p');
-                            functionType.textContent = item.functionType;
-                            log.appendChild(functionType);
-
-                            const description = document.createElement('p');
-                            description.textContent = item.description;
-                            log.appendChild(description);
-
-                            modifiableContainer.append(log);
-                        }
-                        renderPages(data);
+                        // Store all logs data for filtering
+                        window.allLogsData = data;
+                        
+                        // Apply initial filters and sorting
+                        applyFiltersAndSorting(data, pageNumber);
+                        
+                        // Add event listeners for filters
+                        document.getElementById('logType').addEventListener('change', () => {
+                            applyFiltersAndSorting(window.allLogsData, currentPage);
+                        });
+                        
+                        document.getElementById('logSort').addEventListener('change', () => {
+                            applyFiltersAndSorting(window.allLogsData, currentPage);
+                        });
                     });
                 }
+            }
+            
+            // Apply filters and sorting to log data
+            function applyFiltersAndSorting(data, pageNumber) {
+                const logTypeFilter = document.getElementById('logType').value;
+                const sortFilter = document.getElementById('logSort').value;
                 
+                // Filter data
+                let filteredData = data;
+                if (logTypeFilter !== 'all') {
+                    filteredData = data.filter(log => log.logType === logTypeFilter);
+                }
+                
+                // Sort data
+                if (sortFilter === 'newest') {
+                    filteredData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                } else {
+                    filteredData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                }
+                
+                // Render filtered and sorted data
+                renderLogTable(filteredData, pageNumber);
+                renderPages('logs', filteredData);
+            }
+            
+            // Render log table with pagination
+            function renderLogTable(data, pageNumber) {
+                const tbody = document.getElementById('logTableBody');
+                tbody.innerHTML = '';
+                
+                const startIndex = (pageNumber - 1) * itemsPerPage;
+                const endIndex = pageNumber * itemsPerPage;
+                
+                for(let i = startIndex; i < endIndex && i < data.length; i++) {
+                    const item = data[i];
+                    const row = document.createElement('tr');
+                    
+                    const usernameCell = document.createElement('td');
+                    usernameCell.textContent = item.username;
+                    
+                    const typeCell = document.createElement('td');
+                    const typeSpan = document.createElement('span');
+                    typeSpan.textContent = item.logType;
+                    typeSpan.classList.add('log-type', item.logType.toLowerCase());
+                    typeCell.appendChild(typeSpan);
+                    
+                    const timestampCell = document.createElement('td');
+                    timestampCell.textContent = new Date(item.timestamp).toLocaleString();
+                    
+                    const functionCell = document.createElement('td');
+                    functionCell.textContent = item.functionType;
+                    
+                    const descriptionCell = document.createElement('td');
+                    descriptionCell.textContent = item.description;
+                    
+                    row.appendChild(usernameCell);
+                    row.appendChild(typeCell);
+                    row.appendChild(timestampCell);
+                    row.appendChild(functionCell);
+                    row.appendChild(descriptionCell);
+                    
+                    tbody.appendChild(row);
+                }
             }
 
-            /*function renderMenu(pageNumber, query) {
-                if(query == 'accounts') {
-                    modifiableContainer.innerHTML = '';
-                    if(currentPage == 'accounts') {
-                        console.log(storedData);
-                        
-                        //use stored data
-                        //TO-DO: add error checker for null data
-                        const startIndex = (pageNumber - 1) * itemsPerPage;
-                        const endIndex = pageNumber * itemsPerPage;
-                        for(let i = startIndex; i < endIndex && i < data.length; i++) {
-                            const item = storedData[i];
-                            const account = document.createElement('div');
-                            account.classList.add('menu-item');
-
-                            const username = document.createElement('h2');
-                            username.textContent = item.username;
-                            account.appendChild(username);
-
-                            const position = document.createElement('p');
-                            position.textContent = item.position;
-                            account.appendChild(position);
-
-                            modifiableContainer.append(account);
-                        }
-                    } else {
-                        fetch('/get-accounts')
-                        .then(res => res.json())
-                        .then(data => {
-                            console.log(data);
-                            //TO-DO: add error checker for null data
-                            const startIndex = (pageNumber - 1) * itemsPerPage;
-                            const endIndex = pageNumber * itemsPerPage;
-                            storedData = data;
-                            for(let i = startIndex; i < endIndex && i < data.length; i++) {
-                                const item = data[i];
-                                const account = document.createElement('div');
-                                account.classList.add('menu-item');
-
-                                const username = document.createElement('h2');
-                                username.textContent = item.username;
-                                account.appendChild(username);
-
-                                const position = document.createElement('p');
-                                position.textContent = item.position;
-                                account.appendChild(position);
-
-                                modifiableContainer.append(account);
-                            }
-                            renderPages(query);
-                        });
-                        //switching pages/first
-                    }
-                } else if (query == 'logs') {
-                    fetch('/get-logs')
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log(data);
-                        //TO-DO: add error checker for null data
-                        const startIndex = (pageNumber - 1) * itemsPerPage;
-                        const endIndex = pageNumber * itemsPerPage;
-                        for(let i = startIndex; i < endIndex && i < data.length; i++) {
-                            const item = data[i];
-                            const log = document.createElement('div');
-                            log.classList.add('menu-item');
-
-                            const username = document.createElement('h2');
-                            username.textContent = item.username;
-                            log.appendChild(username);
-
-                            const logType = document.createElement('p');
-                            logType.textContent = item.logType;
-                            log.appendChild(logType);
-
-                            const timestamp = document.createElement('p');
-                            timestamp.textContent = item.timestamp;
-                            log.appendChild(timestamp);
-
-                            const functionType = document.createElement('p');
-                            functionType.textContent = item.functionType;
-                            log.appendChild(functionType);
-
-                            const description = document.createElement('p');
-                            description.textContent = item.description;
-                            log.appendChild(description);
-
-                            modifiableContainer.append(log);
-                        }
-                        renderPages(data);
-                    });
-                }
-                
-            }*/
-
+            // Set up button event listeners
             acctManager.addEventListener('click', () => {
-                //clear content
                 renderMenu(1, 'accounts');
             });
-
+            
             logManager.addEventListener('click', () => {
-                modifiableContainer.innerHTML = '';
                 renderMenu(1, 'logs');
             });
-
-            const passwordInput = document.querySelector(".pass-key");
-			const showButton = document.querySelector(".show");
-			
-			showButton.addEventListener("click", function () {
-			if (passwordInput.type === "password") {
-				passwordInput.type = "text";
-			} else {
-				passwordInput.type = "password";
-			}
-			});
-
-			//const passwordChecker = document.getElementById('password');
-			const minLength = document.getElementById('validatePL')
-			const minLowercase = document.getElementById('validateLC')
-			const minUppercase = document.getElementById('validateUC')
-			const minNumeric = document.getElementById('validateNC')
-		
-			console.log(minLength.textContent);
-			let timeoutId;
-
-			passwordInput.addEventListener('input', () => {
-				clearTimeout(timeoutId);
-				timeoutId = setTimeout(() => {
-					const password = passwordInput.value;
-
-					//AJAX✅ 
-					fetch('/validate-password', {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json'},
-						body: JSON.stringify({ password })
-					})
-					.then(res => res.json())
-					.then(data => {
-						console.log(data.validated);
-						const response = data.validated;
-						///PL, LC, UC, NC
-						if(response[0] == true) {minLength.textContent = "✅";}
-						else {minLength.textContent = "❌";}
-
-						if(response[1] == true) {minLowercase.textContent = "✅";}
-						else {minLowercase.textContent = "❌";}
-
-						if(response[2] == true) {minUppercase.textContent = "✅";}
-						else {minUppercase.textContent = "❌";}
-
-						if(response[3] == true) {minNumeric.textContent = "✅";}
-						else {minNumeric.textContent = "❌";}
-					})
-				}, 300)
-			})
-
-
-        })
-    </script>
-    <script src="/js/custom.js"></script>
-    <script>
-
-        $(function() {
-            var selectedClass = "";
-            $("p").click(function(){
-            selectedClass = $(this).attr("data-rel");
-            $("#portfolio").fadeTo(50, 0.1);
-                $("#portfolio div").not("."+selectedClass).fadeOut();
-            setTimeout(function() {
-              $("."+selectedClass).fadeIn();
-              $("#portfolio").fadeTo(50, 1);
-            }, 500);
-                
-            });
+            
+            
         });
-
     </script>
-
-    </body>
+</body>
 </html>

@@ -23,6 +23,7 @@ const dashboardController = require('../controllers/adminDashboardController.js'
 // import middleware
 const authzMiddleware = require('../middleware/authz.js');
 const reauthMiddleware = require('../middleware/reauth.js');
+const validationMiddleware = require('../middleware/validation.js');
 
 const app = express();
 
@@ -50,18 +51,18 @@ app.get('/order-receipt', authzMiddleware.requireRole(['Customer']), orderreceip
 app.get('/order-status', authzMiddleware.requireRole(['Customer', 'Staff', 'Admin']), orderstatusController.getOrderStatus);
 
 app.get('/staff-login', staffloginController.getStaffLogin);
-app.post('/staff-login', staffloginController.postStaffLogin);
+app.post('/staff-login', validationMiddleware.validateLogin, staffloginController.postStaffLogin);
 
 //registration
 app.get('/customer-registration', registrationController.getCustomerRegistration)
-app.post('/customer-registration', registrationController.postCustomerRegistration)
+app.post('/customer-registration', validationMiddleware.validateRegistration, registrationController.postCustomerRegistration)
 app.post('/validate-password', registrationController.postPasswordValidation)
 
 //password reset - critical operations require re-authentication
 app.get('/password-reset-1', passwordResetController.getPasswordResetStep1)
-app.post('/password-reset-2', passwordResetController.postPasswordResetStep2)
-app.post('/password-reset-3', passwordResetController.postPasswordResetStep3)
-app.post('/password-reset-final', passwordResetController.postPasswordResetFinal)
+app.post('/password-reset-2', validationMiddleware.validatePasswordReset, passwordResetController.postPasswordResetStep2)
+app.post('/password-reset-3', validationMiddleware.validatePasswordReset, passwordResetController.postPasswordResetStep3)
+app.post('/password-reset-final', validationMiddleware.validatePasswordReset, passwordResetController.postPasswordResetFinal)
 
 app.get('/admin-dashboard', dashboardController.getAdminDashbaord);
 app.get('/get-accounts', dashboardController.getAccounts);
@@ -73,9 +74,9 @@ app.post('/create-account', dashboardController.postAddAccount);
 app.get('/staff-page', staffpageController.getStaffPage);
 
 // Update order status
-app.post('/update-order-status/:orderId', staffpageController.updateOrderStatus);
+app.post('/update-order-status/:orderId', validationMiddleware.validateOrderStatus, staffpageController.updateOrderStatus);
 // Delete order
-app.delete('/delete-order/:orderId', staffpageController.deleteOrder);
+app.delete('/delete-order/:orderId', validationMiddleware.validateOrderStatus, staffpageController.deleteOrder);
 // Change password routes for logged-in users (requires re-authentication)
 app.get('/change-password', 
     authzMiddleware.requireRole(['Customer', 'Staff', 'Admin']), 
@@ -95,20 +96,23 @@ app.post('/update-order-status/:orderId',
     authzMiddleware.requireRole(['Staff', 'Admin']), 
     authzMiddleware.requireAction('update_orders'),
     authzMiddleware.enforceOrderBusinessRules,
+    validationMiddleware.validateOrderStatus,
     staffpageController.updateOrderStatus
 );
 
-// Delete order - with authorization and business rules
+// Delete order - with authorization and business rules  
 app.delete('/delete-order/:orderId', 
     authzMiddleware.requireRole(['Staff', 'Admin']), 
     authzMiddleware.requireAction('delete_orders'),
+    authzMiddleware.requireAction('update_orders'),
     authzMiddleware.enforceOrderBusinessRules,
+    validationMiddleware.validateOrderStatus,
     staffpageController.deleteOrder
 );
 
 // Re-authentication routes
 app.get('/reauth-required', reauthMiddleware.showReauthForm);
-app.post('/reauth-required', reauthMiddleware.processReauth);
+app.post('/reauth-required', validationMiddleware.validateReauth, reauthMiddleware.processReauth);
 
 /*
     exports the object `app` (defined above)

@@ -308,11 +308,15 @@ const dashboardController= {
     },
 
     postAddAccount: async function(req, res) {
-        //no security questions
         var username = req.body.username;
         var password = req.body.password;
-        var position = req.body.roles
+        var position = req.body.roles;
         
+        // Security questions
+        var secQ1 = req.body.secQ1;
+        var secQ1Ans = req.body.secQ1Ans;
+        var secQ2 = req.body.secQ2;
+        var secQ2Ans = req.body.secQ2Ans;
 
         //secondary checks
         var validated = pV.validatePassword(password);
@@ -330,17 +334,36 @@ const dashboardController= {
         if (response == null) {
             if (allTrue) {
                 const saltRounds = 10;
-                bcrypt.hash(password, saltRounds, async function(err, hash) {
-                    // Store hash in your password DB.
+                
+                try {
+                    // Hash password
+                    const hash = await bcrypt.hash(password, saltRounds);
                     var passwordSchema = {
                         password: hash
-                    }
+                    };
+                    
+                    // Hash security answers
+                    const secAns1Hash = await bcrypt.hash(secQ1Ans, saltRounds);
+                    const secAns2Hash = await bcrypt.hash(secQ2Ans, saltRounds);
+                    
+                    var securityQuestions = [
+                        {
+                            question: secQ1,
+                            answer: secAns1Hash
+                        },
+                        {
+                            question: secQ2,
+                            answer: secAns2Hash
+                        }
+                    ];
+                    
                     //Store as new user
                     var UserSchema = {
                         username: username,
                         password: passwordSchema,
-                        position: position
-                    }
+                        position: position,
+                        security: securityQuestions
+                    };
         
                     var response = await db.insertOne(User, UserSchema);
                     if(response){
@@ -353,7 +376,7 @@ const dashboardController= {
                         };
                     
                         var logged = await db.insertOne(Log, logEntry);
-                        res.render('admin-dashboard', {success: `${Username} has been created as a ${position}!`});
+                        res.render('admin-dashboard', {success: `${username} has been created as a ${position}!`});
                     }else{
                         var logEntry = {
                             username: username,
@@ -364,13 +387,20 @@ const dashboardController= {
                         };
                     
                         var logged = await db.insertOne(Log, logEntry);
-                        res.render('admin-dashboard', {errorMessage: `${Username} has failed.`});
+                        res.render('admin-dashboard', {errorMessage: `${username} has failed.`});
                     }
-                });
-
-                // //store data into session
-                // req.session.user = username;
-                // req.session.position = position;
+                } catch (error) {
+                    var logEntry = {
+                        username: username,
+                        timestamp: Date.now(),
+                        logType: 'Failure',
+                        functionType: 'postAddAccount',
+                        description: 'Creation of account failed due to a system error.'
+                    };
+                
+                    var logged = await db.insertOne(Log, logEntry);
+                    res.render('admin-dashboard', {errorMessage: 'An error occurred while creating the account.'});
+                }
             } else {
                 var logEntry = {
                     username: username,

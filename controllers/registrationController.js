@@ -116,6 +116,11 @@ const registrationController= {
                             var logged = await db.insertOne(Log, logEntry);
                             console.log("added 1 doc");
                             console.log(response);
+                            
+                            // Redirect to staff login page after successful registration
+                            // User must manually log in after registration
+                            return res.redirect('/staff-login?registration=success');
+
                         }else{
                             var logEntry = {
                                 username: username,
@@ -130,11 +135,7 @@ const registrationController= {
                         }
                     });
 
-                    // //store data into session
-                    // req.session.user = username;
-                    // req.session.position = position;
-
-                    res.render('index', {active:'index', position: position});
+                    //res.render('index', {active:'index', position: position});
                 } else {
                     var logEntry = {
                         username: username,

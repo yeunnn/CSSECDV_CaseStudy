@@ -1,8 +1,27 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Re-authentication Required</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+<html lang="en">
+
+    <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/images/ossu-logo.png">
+
+    <title>OSSU | Re-authentication Required</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/owl-carousel.css">
+    <link rel="stylesheet" href="/css/lightbox.css">
+    <link rel="stylesheet" href="/css/order-style.css">
+    <link rel="stylesheet" href="/css/validation.css">
+
     <style>
         .reauth-container {
             max-width: 400px;
@@ -25,33 +44,36 @@
             padding: 15px;
             margin-bottom: 20px;
             color: #856404;
+            font-size: 14px;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 500;
             color: #333;
         }
-        .form-group input {
+        .form-group input[type="password"] {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 16px;
+            box-sizing: border-box;
+            max-length: 128;
         }
         .btn-reauth {
             width: 100%;
-            padding: 12px;
             background-color: #007bff;
             color: white;
+            padding: 12px;
             border: none;
             border-radius: 4px;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
+            transition: background-color 0.3s;
         }
         .btn-reauth:hover {
             background-color: #0056b3;
@@ -69,45 +91,148 @@
             margin-bottom: 20px;
             color: #666;
         }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .btn-home {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .btn-home:hover {
+            background-color: #5a6268;
+            text-decoration: none;
+            color: white;
+        }
+        .btn-logout {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .btn-logout:hover {
+            background-color: #c82333;
+            text-decoration: none;
+            color: white;
+        }
     </style>
-</head>
-<body>
-    <div class="reauth-container">
-        <div class="reauth-header">
-            <h2>🔐 Re-authentication Required</h2>
-        </div>
 
-        <div class="security-notice">
-            <strong>Security Notice:</strong> You are about to perform a critical operation that requires password confirmation for your security.
-        </div>
+    </head>
 
-        <div class="user-info">
-            <p>Logged in as: <strong>{{username}}</strong></p>
-            <p>Role: <strong>{{position}}</strong></p>
-        </div>
+    <body>
 
-        {{#if errorMessage}}
-        <div class="error-message">
-            {{errorMessage}}
-        </div>
-        {{/if}}
-
-        <form action="/reauth-required" method="POST">
-            <div class="form-group">
-                <label for="password">Enter your password to continue:</label>
-                <input type="password" id="password" name="password" required autocomplete="current-password">
-            </div>
-
-            <input type="hidden" name="originalUrl" value="{{originalUrl}}">
-            
-            <button type="submit" class="btn-reauth">Verify Identity</button>
-        </form>
-
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="/logout" style="color: #666; text-decoration: none; font-size: 14px;">Cancel and Logout</a>
+    <!-- ***** Header Area Start ***** -->
+    {{> nav}}
+    <!-- ***** Header Area End ***** -->
+    
+    <div id="top">
+        <div class="container-fluid">
         </div>
     </div>
 
+    <!-- ***** Content Area Start ***** -->
+    <section class="section" id="header-fix-section">
+        <div class="reauth-container">
+            <div class="reauth-header">
+                <h2>🔐 Re-authentication Required</h2>
+            </div>
+
+            <div class="security-notice">
+                <strong>Security Notice:</strong> You are about to perform a critical operation that requires password confirmation for your security.
+            </div>
+
+            <div class="user-info">
+                <p>Logged in as: <strong>{{username}}</strong></p>
+                <p>Role: <strong>{{position}}</strong></p>
+            </div>
+
+            {{#if errorMessage}}
+            <div class="error-message">
+                {{errorMessage}}
+            </div>
+            {{/if}}
+
+            {{#if fieldErrors.password}}
+            <div class="field-error">
+                {{fieldErrors.password}}
+            </div>
+            {{/if}}
+
+            <form action="/reauth-required" method="POST">
+                <div class="form-group">
+                    <label for="password">Enter your password to continue:</label>
+                    <input type="password" 
+                           id="password" 
+                           name="password" 
+                           required 
+                           autocomplete="current-password"
+                           maxlength="128"
+                           placeholder="Enter your password">
+                </div>
+
+                <input type="hidden" name="originalUrl" value="{{originalUrl}}">
+                
+                <button type="submit" class="btn-reauth">Verify Identity</button>
+            </form>
+
+            <div class="button-group">
+                {{#ifCond position 'Customer'}}
+                    <a href="/index" class="btn-home">Return to Home</a>
+                {{else}}
+                    <a href="/staff-page" class="btn-home">Return to Home</a>
+                {{/ifCond}}
+                <a href="/logout" class="btn-logout">Logout</a>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Content Area End ***** -->
+    
+    <!-- ***** Footer Start ***** -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-xs-12">
+                    <div class="right-text-content">
+                            <ul class="social-icons">
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                            </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="logo">
+                        <a href="#top"><img src="/images/ossu-logo-new.png" alt="" width="170px" height="55px"></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs-12">
+                    <div class="left-text-content">
+                        <p>© Copyright OSSU.
+                        
+                        <br>All Rights Reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Reauth Script -->
     <script>
         // Auto-focus on password field
         document.getElementById('password').focus();
@@ -117,5 +242,63 @@
             document.getElementById('password').value = '';
         };
     </script>
-</body>
+
+    <!-- jQuery -->
+    <script src="/js/jquery-2.1.0.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="/js/popper.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <!-- Plugins -->
+    <script src="/js/owl-carousel.js"></script>
+    <script src="/js/accordions.js"></script>
+    <script src="/js/datepicker.js"></script>
+    <script src="/js/scrollreveal.min.js"></script>
+    <script src="/js/waypoints.min.js"></script>
+    <script src="/js/jquery.counterup.min.js"></script>
+    <script src="/js/imgfix.min.js"></script> 
+    <script src="/js/slick.js"></script> 
+    <script src="/js/lightbox.js"></script> 
+    <script src="/js/isotope.js"></script> 
+    
+    <!-- Global Init -->
+    <script src="/js/custom.js"></script>
+    <script>
+
+        $(function() {
+            var selectedClass = "";
+            $("p").click(function(){
+            selectedClass = $(this).attr("data-rel");
+            $("#portfolio").fadeTo(50, 0.1);
+                $("#portfolio div").not("."+selectedClass).fadeOut();
+            setTimeout(function() {
+              $("."+selectedClass).fadeIn();
+              $("#portfolio").fadeTo(50, 1);
+            }, 500);
+                
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const timestamps =document.querySelectorAll(".timestamp");
+            timestamps.forEach(function(timestamp){
+            const date = new Date(timestamp.textContent);
+            const options = {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+                hour12: true,
+                timeZone: "Asia/Manila",
+            };
+            timestamp.textContent = "Placed on: "+date.toLocaleString("en-US", options);
+            });
+        });
+
+    </script>
+    </body>
 </html>
