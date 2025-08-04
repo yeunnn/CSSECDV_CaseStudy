@@ -27,6 +27,58 @@ const staffloginController= {
         res.render('staff-login');
     },
 
+    getUpdateSecurity: async function(req) {
+        console.log('getUpdateSecurity');
+        res.render('security-questions')
+    },
+
+    postUpdateSecurity: async function(req, res) {
+        var username = req.body.username;
+        var password = req.body.password;
+        var secQ1 = req.body.secQ1;
+        var secQ1Ans = req.body.secQ1Ans;
+        var secQ2 = req.body.secQ2;
+        var secQ2Ans = req.body.secQ2Ans;
+
+        //console.log('HELLO WORLD');
+        var response = await db.findOne(User, {username: username}, 'username password');
+        var passwordArr = response.password;
+        if (passwordArr > 1) {
+            passwordArr.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
+        if(response) {
+            bcrypt.compare(password, passwordArr[0].password, async function () {
+                const saltRounds = 10;
+                const firstAns = await bcrypt.hash(secQ1Ans, saltRounds);
+                const secondAns = await bcrypt.hash(secQ2Ans, saltRounds);
+            
+                var resetQuestions1 = {
+                    question: secQ1,
+                    answer: firstAns
+                };
+                var resetQuestions2 = {
+                    question: secQ2,
+                    answer: secondAns
+                };
+
+                var update1 = await db.updateOne(User, {username: username}, {$push: {security: resetQuestions1}});
+                var update2 = await db.updateOne(User, {username: username}, {$push: {security: resetQuestions2}});
+                if(update1 && update2) {
+                    var logEntry = {
+                        username: username,
+                        timestamp: Date.now(),
+                        logType: 'Success',
+                        functionType: 'postUpdateSecurity',
+                        description: `${username} now has security questions.`
+                    };
+                    console.log(response);
+                    var logged = await db.insertOne(Log, logEntry);
+                    res.render('staff-login', {errorMessage: 'Required to Login again.'});
+                }
+            });
+        }
+    },
+
     postStaffLogin: async function (req, res) {
 
             /*
@@ -42,7 +94,7 @@ const staffloginController= {
             var user = {
                 username: username
             };
-            var response = await db.findOne(User,user,'username password position resetQuestions failedAttempts lockedUntil lastSuccessfulLogin lastLoginAttempt');
+            var response = await db.findOne(User,user,'username password position security failedAttempts lockedUntil lastSuccessfulLogin lastLoginAttempt');
 
             // Update last login attempt timestamp
             await db.updateOne(User, {username: username}, {
@@ -116,6 +168,11 @@ const staffloginController= {
 
                             req.session.user = response.username;
                             req.session.position = response.position;
+
+                            if(response.security.length != 2) {
+                                //user exists but no security questions
+                                return res.render('security-questions', {username: username});
+                            }
 
                             var logEntry = {
                                 username: username,
