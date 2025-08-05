@@ -25,6 +25,11 @@ const database = {
         console.log('Connected to: ' + url);
     },
 
+    disconnect: async function () {
+        await mongoose.disconnect();
+        console.log('Disconnected from databaseURL: ' + url);
+    },
+
     /*
         inserts a single `doc` to the database based on the model `model`
     */

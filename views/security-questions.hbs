@@ -4,7 +4,7 @@
 	<head>
 	<meta charset="utf-8">
 
-	<title>OSSU | {{#if user}}Change Password{{else}}Password Reset{{/if}}</title>
+	<title>OSSU | Customer </title>
 
 	<link rel="stylesheet" href="/css/login_signup.css">
 	<link rel="icon" type="image/x-icon" href="/images/ossu-logo.png">
@@ -16,50 +16,61 @@
 	<body>
 		<div class="bg-img">
 			<div class="content" style="overflow: hidden">
-				<header>{{#if user}}Change Password - Security Questions{{else}}Password Reset - Security Questions{{/if}}</header>
+				<header>Customer Registration</header>
 				<!-- Add this where you want the error message to appear -->
 				{{#if errorMessage}}
 					<div class="error-box">
 						{{errorMessage}}
 					</div>
 				{{/if}}
-				<form action="/password-reset-3" method="post">
-					<div class="field">
-                        <input type="text" value="{{username}}" name="username" readonly>
-					</div>
-					<a style="color: white;">{{secQ1}}</a>
-					<br>
+				<form action="/security-questions" method="post">
 					<div class="field">
 						<span class="fa fa-user"></span>
-						<input type="text" required placeholder="Answer..." name="secQ1Ans" required>
+						<input type="text" required value="{{username}}" name="username" readonly>
 					</div>
-					<a style="color: white;">{{secQ2}}</a>
+					<div class="field space">
+						<span class="fa fa-lock"></span>
+						<input type="password" class="pass-key" required placeholder="Password" name="password" required>
+						<span class="show">SHOW</span>
+					</div>
 					<br>
-                    <div class="field">
-						<span class="fa fa-user"></span>
-						<input type="text" required placeholder="Answer..." name="secQ2Ans" required>
+					<div>
+						<label for="role" class="return-home">Select your first security question:</label>
+						<br>
+						<select name="secQ1" id="secQ1">
+  							<option value="What was the name of your first pet?">What was the name of your first pet?</option>
+  							<option value="What was the first video game you played?">What was the first video game you played?</option>
+  							<option value="What is your favorite food?">What is your favorite food?</option>
+							<option value="What is your favorite book?">What is your favorite book?</option>
+						</select>
+						<div class="field">
+							<span class="fa fa-user"></span>
+							<input type="text" required placeholder="Answer..." name="secQ1Ans" required>
+						</div>
+						<br>
+						<label for="role" class="return-home">Select your second security question:</label>
+						<br>
+						<select name="secQ2" id="secQ2">
+  							<option value="What was your dream job as a child?">What was your dream job as a child?</option>
+  							<option value="What was your favorite subject in high school?">What was your favorite subject in high school?</option>
+  							<option value="What was your least favorite food as a child?">What was your least favorite food as a child?</option>
+							<option value="What was the first social event you went to?">What was the first social event you went to?</option>
+						</select>
+						<div class="field">
+							<span class="fa fa-user"></span>
+							<input type="text" required placeholder="Answer..." name="secQ2Ans" required>
+						</div>
+						<br>
 					</div>
 					
 					<div class="field">
-						<input type="submit" value="Continue" name="submit">
+						<input type="submit" value="Register" name="submit">
 					</div>
 				</form>
 				<br>
-				{{#if user}}
-					<!-- Navigation for logged-in users (Change Password flow) -->
-					{{#ifCond position 'Customer'}}
-						<a href="/index" class="return-home">Back to Dashboard</a>
-					{{else}}
-						<a href="/staff-page" class="return-home">Back to Dashboard</a>
-					{{/ifCond}}
-					<br>
-					<a href="/logout" class="return-home">Cancel and Logout</a>
-				{{else}}
-					<!-- Navigation for anonymous users (Forgot Password flow) -->
-					<a href="/" class="return-home">Back to Home</a>
-					<br>
-					<a href="/staff-login" class="return-home">Remember your password? Login</a>
-				{{/if}}
+				<a href="/" class="return-home">Back to Home</a>
+				<br>
+				<a href="/staff-login" class="return-home">Already have an account?</a>
 			</div>
 		</div>
 

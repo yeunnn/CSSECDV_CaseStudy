@@ -53,15 +53,18 @@ app.get('/staff-login', staffloginController.getStaffLogin);
 app.post('/staff-login', staffloginController.postStaffLogin);
 
 //registration
-app.get('/customer-registration', registrationController.getCustomerRegistration)
-app.post('/customer-registration', registrationController.postCustomerRegistration)
-app.post('/validate-password', registrationController.postPasswordValidation)
+app.get('/customer-registration', registrationController.getCustomerRegistration);
+app.post('/customer-registration', registrationController.postCustomerRegistration);
+app.post('/validate-password', registrationController.postPasswordValidation);
+
+app.get('/security-questions', staffloginController.getUpdateSecurity);
+app.post('/security-questions', staffloginController.postUpdateSecurity);
 
 //password reset - critical operations require re-authentication
-app.get('/password-reset-1', passwordResetController.getPasswordResetStep1)
-app.post('/password-reset-2', passwordResetController.postPasswordResetStep2)
-app.post('/password-reset-3', passwordResetController.postPasswordResetStep3)
-app.post('/password-reset-final', passwordResetController.postPasswordResetFinal)
+app.get('/password-reset-1', passwordResetController.getPasswordResetStep1);
+app.post('/password-reset-2', passwordResetController.postPasswordResetStep2);
+app.post('/password-reset-3', passwordResetController.postPasswordResetStep3);
+app.post('/password-reset-final', passwordResetController.postPasswordResetFinal);
 
 app.get('/admin-dashboard', dashboardController.getAdminDashbaord);
 app.get('/get-accounts', dashboardController.getAccounts);
