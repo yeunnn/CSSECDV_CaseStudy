@@ -25,7 +25,13 @@ const staffpageController = {
             // Assuming `results` is an array of orders
             result.sort((a, b) => b.orderID - a.orderID);
 
-            res.render('staff-page', {result, active:'staff-page'});
+            // Redirect to login page if not authenticated
+            var details = {
+                active: 'staff-page',
+                position: req.session.position
+              };
+
+            res.render('staff-page', {result, active:'staff-page', details});
         }
         else{
             res.redirect('/');

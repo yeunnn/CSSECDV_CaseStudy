@@ -10,8 +10,8 @@ const authzMiddleware = {
     // Define role-based access control rules
     rolePermissions: {
         'Admin': {
-            routes: ['*'], // Admin has access to all routes
-            actions: ['*'] // Admin can perform all actions
+            routes: ['*'],
+            actions: ['*']
         },
         'Staff': {
             routes: [
@@ -36,19 +36,6 @@ const authzMiddleware = {
                 '/change-password'
             ],
             actions: ['place_orders', 'view_own_orders']
-        },
-        'Guest': {
-            routes: [
-                '/',
-                '/staff-login',
-                '/customer-registration',
-                '/password-reset-1',
-                '/password-reset-2',
-                '/password-reset-3',
-                '/password-reset-final',
-                '/menu-public'
-            ],
-            actions: ['register', 'login']
         }
     },
 
@@ -184,13 +171,6 @@ const authzMiddleware = {
                     return authzMiddleware.handleUnauthorizedAccess(req, res, userRole);
                 }
             }
-
-            // Business rule: Customers can only view their own orders
-            // Not implemented in the system
-            //if (userRole === 'Customer' && orderId) {
-                // This would need to be implemented with order ownership check
-                // For now, we'll allow it and let the controller handle the logic
-            //}
 
             next();
         } catch (error) {

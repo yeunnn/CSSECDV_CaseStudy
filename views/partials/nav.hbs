@@ -32,11 +32,19 @@
 
                             <!-- Menu -->
                             {{#ifCond active 'menu'}}
+                                {{#ifCond position 'Admin'}}
+                                    <li class="scroll-to-section"><a href="menu">Menu</a></li>
+                                    <li class="scroll-to-section"><a href="staff-page" class="active">Manage Orders</a></li>
+                                    <li class="scroll-to-section"><a href="/admin-dashboard">Dashboard</a></li>
+                                    <li class="scroll-to-section"><a href="/change-password">Change Password</a></li>
+                                    <li class="scroll-to-section"><a href="/logout">Logout</a></li>
+                                {{else}}
                                 <li class="scroll-to-section"><a href="/index">Home</a></li>
                                 <li class="scroll-to-section"><a href="menu" class="active">Menu</a></li>
                                 <li class="scroll-to-section"><a href="order-status">Orders</a></li>
                                 <li class="scroll-to-section"><a href="/change-password">Change Password</a></li>
                                 <li class="scroll-to-section"><a href="/logout">Logout</a></li>
+                                {{/ifCond}}
                             {{/ifCond}}
 
                             <!-- Order Status -->
@@ -59,6 +67,9 @@
 
                             <!-- Staff Page -->
                             {{#ifCond active 'staff-page'}}
+                                {{#ifCond position 'Admin'}}
+                                    <li class="scroll-to-section"><a href="menu">Menu</a></li>
+                                {{/ifCond}}
                                 <li class="scroll-to-section"><a href="staff-page" class="active">Manage Orders</a></li>
                                 <li class="scroll-to-section"><a href="/admin-dashboard">Dashboard</a></li>
                                 <li class="scroll-to-section"><a href="/change-password">Change Password</a></li>

@@ -15,6 +15,13 @@ const menuController = {
       };
       res.render('menu', details);
     }
+    else if (req.session.position === 'Admin') {
+      var details = {
+        active: 'menu',
+        position: req.session.position
+      };
+      res.render('menu', details);
+    }
     else{
       res.redirect('/');
     }

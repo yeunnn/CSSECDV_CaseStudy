@@ -42,11 +42,11 @@ app.get('/index', authzMiddleware.requireRole(['Customer']), controller.userInde
 app.get('/logout', logoutController.getLogOut);
 
 //Menu Controller - with authorization
-app.get('/menu', authzMiddleware.requireRole(['Customer']), menuController.getMenu);
+app.get('/menu', authzMiddleware.requireRole(['Customer', 'Admin']), menuController.getMenu);
 app.get('/menu-public', menupublicController.getMenuPublic);
-app.post('/submit-order', authzMiddleware.requireRole(['Customer']), authzMiddleware.requireAction('place_orders'), menuController.submitOrder);
+app.post('/submit-order', authzMiddleware.requireRole(['Customer', 'Admin']), authzMiddleware.requireAction('place_orders'), menuController.submitOrder);
 
-app.get('/order-receipt', authzMiddleware.requireRole(['Customer']), orderreceiptController.getOrderReceipt);
+app.get('/order-receipt', authzMiddleware.requireRole(['Customer', 'Admin']), orderreceiptController.getOrderReceipt);
 
 app.get('/order-status', authzMiddleware.requireRole(['Customer', 'Staff', 'Admin']), orderstatusController.getOrderStatus);
 
