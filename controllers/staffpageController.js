@@ -4,8 +4,11 @@ const db = require('../models/db.js');
 // import module `User` from `../models/UserModel.js`
 const User = require('../models/UserModel.js');
 
-// import module `User` from `../models/UserModel.js`
+// import module `Order` from `../models/OrderModel.js`
 const Order = require('../models/OrderModel.js');
+
+// import module `Log` from `../models/serverLog.js`
+const Log = require('../models/serverLog.js');
 
 /*
     defines an object which contains functions executed as callback
@@ -30,24 +33,111 @@ const staffpageController = {
     },
 
     updateOrderStatus: async function (req, res) {
-        const orderId = req.params.orderId;
-        const newStatus = req.body.status;
+        try {
+            const orderId = req.params.orderId;
+            const newStatus = req.body.status;
+            const username = req.session.user || 'Unknown';
 
-        // Update the order status in the database
-        await db.updateOne(Order, { orderID: orderId }, { status: newStatus });
+            // Update the order status in the database
+            const result = await db.updateOne(Order, { orderID: parseInt(orderId) }, { status: newStatus });
+            
+            // Check if the update was successful
+            if (result.matchedCount === 0) {
+                console.log("Order with ID not found");
+                throw new Error(`Order with ID ${orderId} not found`);
+            }
+            
+            if (result.modifiedCount === 0) {
+                console.log("Order status for order ${orderId} was not modified");
+                throw new Error(`Order status for order ${orderId} was not modified`);
+            }
 
-        // Send a JSON response
-        res.json({ message: 'Order status updated successfully' });
+            // Log the action
+            const logEntry = {
+                username: username,
+                timestamp: Date.now(),
+                logType: 'Success',
+                functionType: 'updateOrderStatus',
+                description: `${username} updated order ${orderId} status to ${newStatus}`
+            };
+            
+            await db.insertOne(Log, logEntry);
+
+            // Send a JSON response
+            res.json({ message: 'Order status updated successfully' });
+        } catch (error) {
+            const username = req.session.user || 'Unknown';
+            const orderId = req.params.orderId;
+            const newStatus = req.body.status;
+            
+            // Log the error
+            const logEntry = {
+                username: username,
+                timestamp: Date.now(),
+                logType: 'Failure',
+                functionType: 'updateOrderStatus',
+                description: `${username} failed to update order ${orderId} status to ${newStatus}. Error: ${error.message}`
+            };
+            
+            try {
+                await db.insertOne(Log, logEntry);
+            } catch (logError) {
+                console.error('Error logging updateOrderStatus failure:', logError);
+            }
+            
+            console.error('Error updating order status:', error);
+            res.status(500).json({ message: 'Error updating order status: ' + error.message });
+        }
     },
 
     deleteOrder: async function (req, res) {
-        const orderId = req.params.orderId;
+        try {
+            const orderId = req.params.orderId;
+            const username = req.session.user || 'Unknown';
 
-        // Delete the order from the database
-        await db.deleteOne(Order, { orderID: orderId });
+            // Delete the order from the database
+            const result = await db.deleteOne(Order, { orderID: parseInt(orderId) });
+            
+            // Check if the delete was successful
+            if (result.deletedCount === 0) {
+                throw new Error(`Order with ID ${orderId} not found or already deleted`);
+            }
 
-        // Send a JSON response
-        res.json({ message: 'Order deleted successfully' });
+            // Log the action
+            const logEntry = {
+                username: username,
+                timestamp: Date.now(),
+                logType: 'Success',
+                functionType: 'deleteOrder',
+                description: `${username} deleted order ${orderId}`
+            };
+            
+            await db.insertOne(Log, logEntry);
+
+            // Send a JSON response
+            res.json({ message: 'Order deleted successfully' });
+        } catch (error) {
+            const username = req.session.user || 'Unknown';
+            const orderId = req.params.orderId;
+            
+            // Log the error
+            const logEntry = {
+                username: username,
+                timestamp: Date.now(),
+                logType: 'Failure',
+                functionType: 'deleteOrder',
+                description: `${username} failed to delete order ${orderId}. Error: ${error.message}`
+            };
+            
+            try {
+                await db.insertOne(Log, logEntry);
+            } catch (logError) {
+                console.error('Error logging deleteOrder failure:', logError);
+            }
+            
+            console.error('Error deleting order:', error);
+            res.status(500).json({ message: 'Error deleting order: ' + error.message });
+        }
     }
 }
 

@@ -3,6 +3,7 @@ const db = require('../models/db.js');
 
 const Order = require('../models/OrderModel.js');
 const OrderCounter = require('../models/orderCounter.js');
+const Log = require('../models/serverLog.js');
 
 const menuController = {
   getMenu: async function (req, res) {
@@ -60,7 +61,17 @@ const menuController = {
         
         // Save the order to the database
         await db.insertOne(Order, order);
-    
+
+        // Log the successful order submission
+        const logEntry = {
+          username: req.session.user || 'Unknown Customer',
+          timestamp: new Date(),
+          logType: 'Success',
+          functionType: 'submitOrder',
+          description: `Customer submitted order ID ${orderNumber} with total ${totalPrice}, order type ${orderType}, payment type ${paymentType}`
+        };
+        await db.insertOne(Log, logEntry);
+
         // Send a success status of 201 (Created) instead of 200 (OK)
         //res.status(201).json({ message: 'Order submitted successfully' });
         res.render('order-receipt', order);
@@ -68,6 +79,17 @@ const menuController = {
     } catch (err) {
       // Log the error for debugging purposes
       console.error(err);
+      
+      // Log the failed order submission
+      const logEntry = {
+        username: req.session.user || 'Unknown Customer',
+        timestamp: new Date(),
+        logType: 'Failure',
+        functionType: 'submitOrder',
+        description: `Customer failed to submit order. Error: ${err.message}`
+      };
+      await db.insertOne(Log, logEntry);
+      
       res.status(500).json({ error: 'An error occurred while submitting the order' });
     }
   }

@@ -28,13 +28,13 @@ const validationRules = {
     
     // Order status updates
     orderStatus: {
-        allowedValues: ['Pending', 'Preparing', 'Ready', 'Completed', 'Cancelled'],
+        allowedValues: ['Pending', 'Preparing', 'Ready', 'Completed', 'Cancelled', 'Served'],
         errorMessage: 'Invalid order status'
     },
     
-    // Order ID validation
+    // Order ID validation - updated to match Number type in OrderModel
     orderId: {
-        pattern: /^[a-fA-F0-9]{24}$/,
+        pattern: /^\d+$/,
         errorMessage: 'Invalid order ID format'
     }
 };
