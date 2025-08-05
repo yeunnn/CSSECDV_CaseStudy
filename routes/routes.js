@@ -71,7 +71,7 @@ app.post('/update-roles', dashboardController.postChangeRoles);
 app.post('/delete-account', dashboardController.postDeleteAccount);
 app.post('/create-account', dashboardController.postAddAccount);
 
-app.get('/staff-page', staffpageController.getStaffPage);
+app.get('staff-page', staffpageController.getStaffPage);
 
 // Update order status
 app.post('/update-order-status/:orderId', validationMiddleware.validateOrderStatus, staffpageController.updateOrderStatus);

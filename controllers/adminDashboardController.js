@@ -38,7 +38,13 @@ const dashboardController= {
                     };
                 
                     var logged = await db.insertOne(Log, logEntry);
-                    res.render('admin-dashboard');
+                    
+                    // render admin dashboard
+                    var details = {
+                        active: 'admin-dashboard',
+                        position: req.session.position
+                    };
+                    res.render('admin-dashboard', details);
                 } else {
                     var logEntry = {
                         username: username,

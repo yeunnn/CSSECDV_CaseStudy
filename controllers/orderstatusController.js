@@ -20,6 +20,22 @@ const orderstatusController = {
 
             res.render('order-status', {result, active:'order-status'});
         }
+        else if (req.session.position === 'Admin') {
+            var projection = 'items orderType status orderID timestamp payment';
+
+            var result = await db.findMany(Order, {}, projection);
+
+            // Assuming `results` is an array of orders
+            result.sort((a, b) => b.orderID - a.orderID);
+
+            // Redirect to login page if not authenticated
+            var details = {
+                active: 'staff-page',
+                position: req.session.position,
+                result: result
+              };
+            res.render('staff-page', details);
+        }
         else{
             res.redirect('/');
         }

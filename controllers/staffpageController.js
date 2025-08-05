@@ -28,10 +28,10 @@ const staffpageController = {
             // Redirect to login page if not authenticated
             var details = {
                 active: 'staff-page',
-                position: req.session.position
+                position: req.session.position,
+                result: result
               };
-
-            res.render('staff-page', {result, active:'staff-page', details});
+            res.render('staff-page', details);
         }
         else{
             res.redirect('/');

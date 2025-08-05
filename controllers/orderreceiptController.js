@@ -17,6 +17,13 @@ const orderreceiptController = {
             };
             res.render('order-receipt',details);
         }
+        else if (req.session.position === 'Admin') {
+            var details = {
+              active: 'order-receipt',
+              position: req.session.position
+            };
+            res.render('order-receipt', details);
+        }
         else{
             res.redirect('/');
         }

@@ -33,8 +33,8 @@
                             <!-- Menu -->
                             {{#ifCond active 'menu'}}
                                 {{#ifCond position 'Admin'}}
-                                    <li class="scroll-to-section"><a href="menu">Menu</a></li>
-                                    <li class="scroll-to-section"><a href="staff-page" class="active">Manage Orders</a></li>
+                                    <li class="scroll-to-section"><a href="menu" class="active">Menu</a></li>
+                                    <li class="scroll-to-section"><a href="/staff-page">Manage Orders</a></li>
                                     <li class="scroll-to-section"><a href="/admin-dashboard">Dashboard</a></li>
                                     <li class="scroll-to-section"><a href="/change-password">Change Password</a></li>
                                     <li class="scroll-to-section"><a href="/logout">Logout</a></li>
@@ -74,6 +74,17 @@
                                 <li class="scroll-to-section"><a href="/admin-dashboard">Dashboard</a></li>
                                 <li class="scroll-to-section"><a href="/change-password">Change Password</a></li>
                                 <li class="scroll-to-section"><a href="/logout">Logout</a></li>
+                            {{/ifCond}}
+
+                            <!-- Admin Dashbboard -->
+                            {{#ifCond active 'admin-dashboard'}}
+                                {{#ifCond position 'Admin'}}
+                                    <li class="scroll-to-section"><a href="menu">Menu</a></li>
+                                    <li class="scroll-to-section"><a href="staff-page">Manage Orders</a></li>
+                                    <li class="scroll-to-section"><a href="/admin-dashboard" class="active">Dashboard</a></li>
+                                    <li class="scroll-to-section"><a href="/change-password">Change Password</a></li>
+                                    <li class="scroll-to-section"><a href="/logout">Logout</a></li>
+                                {{/ifCond}}
                             {{/ifCond}}
                         </ul>
                         <a class='menu-trigger'>
