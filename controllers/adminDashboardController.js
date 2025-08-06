@@ -237,7 +237,13 @@ const dashboardController= {
                                 };
                             
                                 var logged = await db.insertOne(Log, logEntry);
-                                res.render('admin-dashboard', {success: 'User Role has been successfully updated.'});
+                                // Redirect to login page if not authenticated
+                                var details = {
+                                    active: 'admin-dashboard',
+                                    position: req.session.position,
+                                    success: 'User Role has been successfully updated.'
+                                };
+                                res.render('admin-dashboard', details);
                             } else {
                                 var logEntry = {
                                     username: username,
@@ -248,7 +254,13 @@ const dashboardController= {
                                 };
                             
                                 var logged = await db.insertOne(Log, logEntry);
-                                res.render('admin-dashboard', {success: 'User Role update has failed.'});
+                                // Redirect to login page if not authenticated
+                                var details = {
+                                    active: 'admin-dashboard',
+                                    position: req.session.position,
+                                    success: 'User Role update has failed.'
+                                };
+                                res.render('admin-dashboard', details);
                             }
                         } else {
                             var logEntry = {
@@ -260,7 +272,13 @@ const dashboardController= {
                             };
                         
                             var logged = await db.insertOne(Log, logEntry);
-                            res.render('admin-dashboard', {success: 'User has the same role.'});
+                            // Redirect to login page if not authenticated
+                            var details = {
+                                active: 'admin-dashboard',
+                                position: req.session.position,
+                                success: 'User has the same role.'
+                            };
+                            res.render('admin-dashboard', details);
                         }
                     } else {
                         var logEntry = {
@@ -272,7 +290,13 @@ const dashboardController= {
                         };
                     
                         var logged = await db.insertOne(Log, logEntry);
-                        res.render('admin-dashboard', {errorMessage: 'Invalid values.'});
+                        // Redirect to login page if not authenticated
+                        var details = {
+                            active: 'admin-dashboard',
+                            position: req.session.position,
+                            errorMessage: 'Invalid values.'
+                        };
+                        res.render('admin-dashboard', details);
                     }
                 } else {
                     var logEntry = {
@@ -382,7 +406,13 @@ const dashboardController= {
                         };
                     
                         var logged = await db.insertOne(Log, logEntry);
-                        res.render('admin-dashboard', {success: `${username} has been created as a ${position}!`});
+                        // Redirect to login page if not authenticated
+                        var details = {
+                            active: 'admin-dashboard',
+                            position: req.session.position,
+                            success: `${username} has been created as a ${position}!`
+                        };
+                        res.render('admin-dashboard', details);
                     }else{
                         var logEntry = {
                             username: username,
@@ -393,7 +423,13 @@ const dashboardController= {
                         };
                     
                         var logged = await db.insertOne(Log, logEntry);
-                        res.render('admin-dashboard', {errorMessage: `${username} has failed.`});
+                        // Redirect to login page if not authenticated
+                        var details = {
+                            active: 'admin-dashboard',
+                            position: req.session.position,
+                            errorMessage: `${username} has failed.`
+                        };
+                        res.render('admin-dashboard', details);
                     }
                 } catch (error) {
                     var logEntry = {
@@ -405,7 +441,13 @@ const dashboardController= {
                     };
                 
                     var logged = await db.insertOne(Log, logEntry);
-                    res.render('admin-dashboard', {errorMessage: 'An error occurred while creating the account.'});
+                    // Redirect to login page if not authenticated
+                    var details = {
+                        active: 'admin-dashboard',
+                        position: req.session.position,
+                        errorMessage: 'An error occurred while creating the account.'
+                    };
+                    res.render('admin-dashboard', details);
                 }
             } else {
                 var logEntry = {
@@ -417,7 +459,13 @@ const dashboardController= {
                 };
                 
                 var logged = await db.insertOne(Log, logEntry);
-                res.render('admin-dashboard', {errorMessage: 'Invalid username or password.'});
+                // Redirect to login page if not authenticated
+                var details = {
+                    active: 'admin-dashboard',
+                    position: req.session.position,
+                    errorMessage: 'Invalid username or password.'
+                };
+                res.render('admin-dashboard', details);
             }
         } else {
             var logEntry = {
@@ -429,7 +477,13 @@ const dashboardController= {
             };
             
             var logged = await db.insertOne(Log, logEntry);
-            res.render('admin-dashboard', {errorMessage: 'Invalid username or password.'});
+            // Redirect to login page if not authenticated
+            var details = {
+                active: 'admin-dashboard',
+                position: req.session.position,
+                errorMessage: 'Invalid username or password.'
+              };
+            res.render('admin-dashboard', details);
         }
     },
 
@@ -461,7 +515,13 @@ const dashboardController= {
                             };
                         
                             var logged = await db.insertOne(Log, logEntry);
-                            res.render('admin-dashboard', {success: 'User has been successfully deleted.'});
+                            // Redirect to login page if not authenticated
+                            var details = {
+                                active: 'admin-dashboard',
+                                position: req.session.position,
+                                success: 'User has been successfully deleted.'
+                            };
+                            res.render('admin-dashboard', details);
                         } else {
                             var logEntry = {
                                 username: username,
@@ -472,7 +532,13 @@ const dashboardController= {
                             };
                         
                             var logged = await db.insertOne(Log, logEntry);
-                            res.render('admin-dashboard', {errorMessage: 'User has not been deleted.'});
+                            // Redirect to login page if not authenticated
+                            var details = {
+                                active: 'admin-dashboard',
+                                position: req.session.position,
+                                errorMessage: 'User has not been deleted.'
+                            };
+                            res.render('admin-dashboard', details);
                         }
                     } else {
                         var logEntry = {
@@ -484,7 +550,13 @@ const dashboardController= {
                         };
                     
                         var logged = await db.insertOne(Log, logEntry);
-                        res.render('admin-dashboard', {errorMessage: 'User has already been deleted.'});
+                        // Redirect to login page if not authenticated
+                        var details = {
+                            active: 'admin-dashboard',
+                            position: req.session.position,
+                            errorMessage: 'User has already been deleted.'
+                        };
+                        res.render('admin-dashboard', details);
                     }
                 } else {
                     var logEntry = {
@@ -508,7 +580,13 @@ const dashboardController= {
                 };
                 
                 var logged = await db.insertOne(Log, logEntry);
-                res.render('admin-dashboard', {errorMessage: 'User does not exist or has already been deleted.'});
+                // Redirect to login page if not authenticated
+                var details = {
+                    active: 'admin-dashboard',
+                    position: req.session.position,
+                    errorMessage: 'User does not exist or has already been deleted.'
+                };
+                res.render('admin-dashboard', details);
             }
         } else {
             //not logged in or invalid user
